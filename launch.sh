@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $HOME/BDUniQue
+cd $HOME/kiavasec_bot
 
 install() {
 	    cd tg
