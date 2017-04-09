@@ -1093,12 +1093,12 @@ matches[3] then
 		local send_file = 
 "./"..matches[2].."/"..matches[3]
 		tdcli.sendDocument(msg.chat_id_, msg.id_,0, 
-1, nil, send_file, '@BeyondTeam', dl_cb, nil)
+1, nil, send_file, '@kiavair', dl_cb, nil)
 	end
 	if matches[1]:lower() == "sendplug" and matches[2] then
 	    local plug = "./plugins/"..matches[2]..".lua"
 		tdcli.sendDocument(msg.chat_id_, msg.id_,0, 
-1, nil, plug, '@BeyondTeam', dl_cb, nil)
+1, nil, plug, '@kiavair', dl_cb, nil)
     end
   end
 
@@ -1158,7 +1158,7 @@ return chat_list(msg)
 	   tdcli.sendMessage(matches[2], 0, 1, "Group has been removed by admin command", 1, 'html')
     return '_Group_ *'..matches[2]..'* _removed_'
 		end
-if matches[1] == 'beyond' then
+if matches[1] == 'kiava' then
 return tdcli.sendMessage(msg.to.id, msg.id, 1, _config.info_text, 1, 'html')
     end
 if matches[1] == 'adminlist' and is_admin(msg) then
@@ -1192,7 +1192,7 @@ if matches[1] == "helptools" and is_mod(msg) then
 if not lang then
 text = [[
 
-_Sudoer And Admins Beyond Bot Help :_
+_Sudoer And Admins Kiava Bot Help :_
 
 *!visudo* `[username|id|reply]`
 _Add Sudo_
@@ -1433,7 +1433,7 @@ _config.cmd .. "([Aa]dminprom) (.*)$",
 _config.cmd .. "([Aa]dmindem) (.*)$",
 _config.cmd .. "([Ll]eave)$",
 _config.cmd .. "([Aa]utoleave) (.*)$", 
-_config.cmd .. "([Bb]eyond)$",
+_config.cmd .. "([Kk]iava)$",
 _config.cmd .. "([Cc]reategroup) (.*)$",
 _config.cmd .. "([Cc]reatesuper) (.*)$",
 _config.cmd .. "([Tt]osuper)$",
@@ -1465,4 +1465,4 @@ _config.cmd .. "([Rr]em)$",
 }, 
 run = run, pre_process = pre_process
 }
--- #End By @BeyondTeam
+-- #End By @kiavair
