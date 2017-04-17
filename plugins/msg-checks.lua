@@ -46,7 +46,7 @@ redis:setex('autodeltime', 14400, true)
      run_bash("rm -rf ~/.telegram-cli/data/document/*")
      run_bash("rm -rf ~/.telegram-cli/data/profile_photo/*")
      run_bash("rm -rf ~/.telegram-cli/data/encrypted/*")
-	 run_bash("rm -rf ~/BDReborn/photos/*")
+	 run_bash("rm -rf ./photos/*")
 end
     if data[tostring(chat)] and data[tostring(chat)]['mutes'] then
 		mutes = data[tostring(chat)]['mutes']
@@ -173,8 +173,8 @@ end
 	else
 		lock_spam = 'no'
 	end
-	if settings.flood then
-		lock_flood = settings.flood
+	if settings.lock_flood then
+		lock_flood = settings.lock_flood
 	else
 		lock_flood = 'no'
 	end
