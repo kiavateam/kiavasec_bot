@@ -31,8 +31,9 @@ end
           lock_tag = 'yes',
           lock_spam = 'yes',
           lock_webpage = 'no',
+          lock_mention = 'no',
           lock_markdown = 'no',
-          flood = 'yes',
+          lock_flood = 'yes',
           lock_bots = 'yes',
           lock_pin = 'no',
           welcome = 'no',
@@ -1226,7 +1227,7 @@ else
 end
 end
 
-local lock_flood = data[tostring(target)]["settings"]["flood"] 
+local lock_flood = data[tostring(target)]["settings"]["lock_flood"] 
 if lock_flood == "yes" then
 if not lang then
  return "*Flooding* _Is Already Locked_"
@@ -1234,7 +1235,7 @@ elseif lang then
  return "ارسال پیام مکرر در گروه هم اکنون ممنوع است"
 end
 else
- data[tostring(target)]["settings"]["flood"] = "yes"
+ data[tostring(target)]["settings"]["lock_flood"] = "yes"
 save_data(_config.moderation.data, data) 
 if not lang then
  return "*Flooding* _Has Been Locked_"
@@ -1255,7 +1256,7 @@ return "شما مدیر گروه نمیباشید"
 end
 end 
 
-local lock_flood = data[tostring(target)]["settings"]["flood"]
+local lock_flood = data[tostring(target)]["settings"]["lock_flood"]
  if lock_flood == "no" then
 if not lang then
 return "*Flooding* _Is Not Locked_" 
@@ -1263,7 +1264,7 @@ elseif lang then
 return "ارسال پیام مکرر در گروه ممنوع نمیباشد"
 end
 else 
-data[tostring(target)]["settings"]["flood"] = "no" save_data(_config.moderation.data, data) 
+data[tostring(target)]["settings"]["lock_flood"] = "no" save_data(_config.moderation.data, data) 
 if not lang then
 return "*Flooding* _Has Been Unlocked_" 
 else
@@ -1711,10 +1712,10 @@ local cmdss = redis:hget('group:'..msg.to.id..':cmd', 'bot')
 	end
 if not lang then
 local settings = data[tostring(target)]["settings"] 
-text = "*Group Settings:*\n_Lock edit :_ *"..settings.lock_edit.."*\n_Lock links :_ *"..settings.lock_link.."*\n_Lock tags :_ *"..settings.lock_tag.."*\n_Lock Join :_ *"..settings.lock_join.."*\n_Lock flood :_ *"..settings.flood.."*\n_Lock spam :_ *"..settings.lock_spam.."*\n_Lock mention :_ *"..settings.lock_mention.."*\n_Lock arabic :_ *"..settings.lock_arabic.."*\n_Lock webpage :_ *"..settings.lock_webpage.."*\n_Lock markdown :_ *"..settings.lock_markdown.."*\n_Group welcome :_ *"..settings.welcome.."*\n_Lock pin message :_ *"..settings.lock_pin.."*\n_Bots protection :_ *"..settings.lock_bots.."*\n_Flood sensitivity :_ *"..NUM_MSG_MAX.."*\n_Character sensitivity :_ *"..SETCHAR.."*\n_Flood check time :_ *"..TIME_CHECK.."*\n*____________________*\n_Bot Commands :_ *"..cmdsss.."*\n_Expire Date :_ *"..expire_date.."*\n*Bot channel*: @kiavair\n*Group Language* : *EN*"
+text = "*Group Settings:*\n_Lock edit :_ *"..settings.lock_edit.."*\n_Lock links :_ *"..settings.lock_link.."*\n_Lock tags :_ *"..settings.lock_tag.."*\n_Lock Join :_ *"..settings.lock_join.."*\n_Lock flood :_ *"..settings.lock_flood.."*\n_Lock spam :_ *"..settings.lock_spam.."*\n_Lock mention :_ *"..settings.lock_mention.."*\n_Lock arabic :_ *"..settings.lock_arabic.."*\n_Lock webpage :_ *"..settings.lock_webpage.."*\n_Lock markdown :_ *"..settings.lock_markdown.."*\n_Group welcome :_ *"..settings.welcome.."*\n_Lock pin message :_ *"..settings.lock_pin.."*\n_Bots protection :_ *"..settings.lock_bots.."*\n_Flood sensitivity :_ *"..NUM_MSG_MAX.."*\n_Character sensitivity :_ *"..SETCHAR.."*\n_Flood check time :_ *"..TIME_CHECK.."*\n*____________________*\n_Bot Commands :_ *"..cmdsss.."*\n_Expire Date :_ *"..expire_date.."*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
 else
 local settings = data[tostring(target)]["settings"] 
- text = "*تنظیمات گروه:*\n_قفل ویرایش پیام :_ *"..settings.lock_edit.."*\n_قفل لینک :_ *"..settings.lock_link.."*\n_قفل ورود :_ *"..settings.lock_join.."*\n_قفل تگ :_ *"..settings.lock_tag.."*\n_قفل پیام مکرر :_ *"..settings.flood.."*\n_قفل هرزنامه :_ *"..settings.lock_spam.."*\n_قفل فراخوانی :_ *"..settings.lock_mention.."*\n_قفل عربی :_ *"..settings.lock_arabic.."*\n_قفل صفحات وب :_ *"..settings.lock_webpage.."*\n_قفل فونت :_ *"..settings.lock_markdown.."*\n_پیام خوشآمد گویی :_ *"..settings.welcome.."*\n_قفل سنجاق کردن :_ *"..settings.lock_pin.."*\n_محافظت در برابر ربات ها :_ *"..settings.lock_bots.."*\n_حداکثر پیام مکرر :_ *"..NUM_MSG_MAX.."*\n_حداکثر حروف مجاز :_ *"..SETCHAR.."*\n_زمان بررسی پیام های مکرر :_ *"..TIME_CHECK.."*\n*____________________*\n_دستورات ربات :_ *"..cmdsss.."*\n_تاریخ انقضا :_ *"..expire_date.."*\n*کانال ما*: @kiavair\n_زبان سوپرگروه_ : *فارسی*"
+ text = "*تنظیمات گروه:*\n_قفل ویرایش پیام :_ *"..settings.lock_edit.."*\n_قفل لینک :_ *"..settings.lock_link.."*\n_قفل ورود :_ *"..settings.lock_join.."*\n_قفل تگ :_ *"..settings.lock_tag.."*\n_قفل پیام مکرر :_ *"..settings.lock_flood.."*\n_قفل هرزنامه :_ *"..settings.lock_spam.."*\n_قفل فراخوانی :_ *"..settings.lock_mention.."*\n_قفل عربی :_ *"..settings.lock_arabic.."*\n_قفل صفحات وب :_ *"..settings.lock_webpage.."*\n_قفل فونت :_ *"..settings.lock_markdown.."*\n_پیام خوشآمد گویی :_ *"..settings.welcome.."*\n_قفل سنجاق کردن :_ *"..settings.lock_pin.."*\n_محافظت در برابر ربات ها :_ *"..settings.lock_bots.."*\n_حداکثر پیام مکرر :_ *"..NUM_MSG_MAX.."*\n_حداکثر حروف مجاز :_ *"..SETCHAR.."*\n_زمان بررسی پیام های مکرر :_ *"..TIME_CHECK.."*\n*____________________*\n_دستورات ربات :_ *"..cmdsss.."*\n_تاریخ انقضا :_ *"..expire_date.."*\n*کانال ما*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
 end
 text = string.gsub(text, 'yes', '✅')
 text = string.gsub(text, 'no', '❌')
@@ -2739,10 +2740,10 @@ elseif tonumber(check_time) > 86400 then
 end
 if not lang then
 local mutes = data[tostring(target)]["mutes"] 
-  text = " *Group Mute List* : \n_Mute gif :_ *"..mutes.mute_gif.."*\n_Mute text :_ *"..mutes.mute_text.."*\n_Mute inline :_ *"..mutes.mute_inline.."*\n_Mute game :_ *"..mutes.mute_game.."*\n_Mute photo :_ *"..mutes.mute_photo.."*\n_Mute video :_ *"..mutes.mute_video.."*\n_Mute audio :_ *"..mutes.mute_audio.."*\n_Mute voice :_ *"..mutes.mute_voice.."*\n_Mute sticker :_ *"..mutes.mute_sticker.."*\n_Mute contact :_ *"..mutes.mute_contact.."*\n_Mute forward :_ *"..mutes.mute_forward.."*\n_Mute location :_ *"..mutes.mute_location.."*\n_Mute document :_ *"..mutes.mute_document.."*\n_Mute TgService :_ *"..mutes.mute_tgservice.."*\n_Mute Keyboard :_ *"..mutes.mute_keyboard.."*\n_Mute All :_ "..mute_all1.."\n*____________________*\n*Bot channel*: @kiavair\n*Group Language* : *EN*"
+  text = " *Group Mute List* : \n_Mute gif :_ *"..mutes.mute_gif.."*\n_Mute text :_ *"..mutes.mute_text.."*\n_Mute inline :_ *"..mutes.mute_inline.."*\n_Mute game :_ *"..mutes.mute_game.."*\n_Mute photo :_ *"..mutes.mute_photo.."*\n_Mute video :_ *"..mutes.mute_video.."*\n_Mute audio :_ *"..mutes.mute_audio.."*\n_Mute voice :_ *"..mutes.mute_voice.."*\n_Mute sticker :_ *"..mutes.mute_sticker.."*\n_Mute contact :_ *"..mutes.mute_contact.."*\n_Mute forward :_ *"..mutes.mute_forward.."*\n_Mute location :_ *"..mutes.mute_location.."*\n_Mute document :_ *"..mutes.mute_document.."*\n_Mute TgService :_ *"..mutes.mute_tgservice.."*\n_Mute Keyboard :_ *"..mutes.mute_keyboard.."*\n_Mute All :_ "..mute_all1.."\n*____________________*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
 else
 local mutes = data[tostring(target)]["mutes"] 
- text = " *لیست بیصدا ها* : \n_بیصدا تصاویر متحرک :_ *"..mutes.mute_gif.."*\n_بیصدا متن :_ *"..mutes.mute_text.."*\n_بیصدا کیبورد شیشه ای :_ *"..mutes.mute_inline.."*\n_بیصدا بازی های تحت وب :_ *"..mutes.mute_game.."*\n_بیصدا عکس :_ *"..mutes.mute_photo.."*\n_بیصدا فیلم :_ *"..mutes.mute_video.."*\n_بیصدا آهنگ :_ *"..mutes.mute_audio.."*\n_بیصدا صدا :_ *"..mutes.mute_voice.."*\n_بیصدا برچسب :_ *"..mutes.mute_sticker.."*\n_بیصدا مخاطب :_ *"..mutes.mute_contact.."*\n_بیصدا نقل قول :_ *"..mutes.mute_forward.."*\n_بیصدا موقعیت :_ *"..mutes.mute_location.."*\n_بیصدا اسناد :_ *"..mutes.mute_document.."*\n_بیصدا خدمات تلگرام :_ *"..mutes.mute_tgservice.."*\n_بیصدا صفحه کلید :_ *"..mutes.mute_keyboard.."*\n_بیصدا همه پیام ها :_ "..mute_all2.."\n*____________________*\n*Bot channel*: @kiavair\n_زبان سوپرگروه_ : *فارسی*"
+ text = " *لیست بیصدا ها* : \n_بیصدا تصاویر متحرک :_ *"..mutes.mute_gif.."*\n_بیصدا متن :_ *"..mutes.mute_text.."*\n_بیصدا کیبورد شیشه ای :_ *"..mutes.mute_inline.."*\n_بیصدا بازی های تحت وب :_ *"..mutes.mute_game.."*\n_بیصدا عکس :_ *"..mutes.mute_photo.."*\n_بیصدا فیلم :_ *"..mutes.mute_video.."*\n_بیصدا آهنگ :_ *"..mutes.mute_audio.."*\n_بیصدا صدا :_ *"..mutes.mute_voice.."*\n_بیصدا برچسب :_ *"..mutes.mute_sticker.."*\n_بیصدا مخاطب :_ *"..mutes.mute_contact.."*\n_بیصدا نقل قول :_ *"..mutes.mute_forward.."*\n_بیصدا موقعیت :_ *"..mutes.mute_location.."*\n_بیصدا اسناد :_ *"..mutes.mute_document.."*\n_بیصدا خدمات تلگرام :_ *"..mutes.mute_tgservice.."*\n_بیصدا صفحه کلید :_ *"..mutes.mute_keyboard.."*\n_بیصدا همه پیام ها :_ "..mute_all2.."\n*____________________*\n*Bot channel*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
 end
 text = string.gsub(text, 'yes', '🔇')
 text = string.gsub(text, 'no', '🔉')
@@ -2798,7 +2799,7 @@ if matches[2] and #matches[2] > 3 and not matches[3] then
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="id"})
       end
    end
-if matches[1]:lower() == "pin" or matches[1] == 'سنجاق' and is_mod(msg) and msg.reply_id then
+if (matches[1]:lower() == "pin" or matches[1] == 'سنجاق') and is_mod(msg) and msg.reply_id then
 local lock_pin = data[tostring(msg.to.id)]["settings"]["lock_pin"] 
  if lock_pin == 'yes' then
 if is_owner(msg) then
@@ -2824,7 +2825,7 @@ return "پیام سجاق شد"
 end
 end
 end
-if matches[1]:lower() == 'unpin' or matches[1] == 'حذف سنجاق' and is_mod(msg) then
+if (matches[1]:lower() == 'unpin' or matches[1] == 'حذف سنجاق') and is_mod(msg) then
 local lock_pin = data[tostring(msg.to.id)]["settings"]["lock_pin"] 
  if lock_pin == 'yes' then
 if is_owner(msg) then
@@ -2936,7 +2937,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[3],cmd="remwhitelist"})
       end
    end
-if matches[1]:lower() == "setowner" or matches[1] == 'مالک' and is_admin(msg) then
+if (matches[1]:lower() == "setowner" or matches[1] == 'مالک') and is_admin(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -2978,7 +2979,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="remowner"})
       end
    end
-if matches[1]:lower() == "promote" or matches[1] == 'مدیر' and is_owner(msg) then
+if (matches[1]:lower() == "promote" or matches[1] == 'مدیر') and is_owner(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -2999,7 +3000,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="promote"})
       end
    end
-if matches[1]:lower() == "demote" or matches[1] == 'حذف مدیر' and is_owner(msg) then
+if (matches[1]:lower() == "demote" or matches[1] == 'حذف مدیر') and is_owner(msg) then
 if not matches[2] and msg.reply_id then
  tdcli_function ({
       ID = "GetMessage",
@@ -3020,7 +3021,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="demote"})
       end
    end
-if matches[1]:lower() == "lock" or matches[1] == 'قفل' and is_mod(msg) then
+if (matches[1]:lower() == "lock" or matches[1] == 'قفل') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "link" then
@@ -3106,7 +3107,7 @@ if matches[2] == 'دستورات' then
 			end
 			end
 end
-if matches[1]:lower() == "unlock" or matches[1] == 'باز' and is_mod(msg) then
+if (matches[1]:lower() == "unlock" or matches[1] == 'باز') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "link" then
@@ -3192,7 +3193,7 @@ if matches[2] == 'دستورات' then
 			end
 	end
 end
-if matches[1]:lower() == "mute" or matches[1] == 'بیصدا' and is_mod(msg) then
+if (matches[1]:lower() == "mute" or matches[1] == 'بیصدا') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "gif" then
@@ -3298,7 +3299,7 @@ return "بیصدا کردن گروه فعال شد"
 end
 end
 end
-if matches[1]:lower() == "unmute" or matches[1] == 'باصدا' and is_mod(msg) then
+if (matches[1]:lower() == "unmute" or matches[1] == 'باصدا') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "gif" then
@@ -3405,7 +3406,7 @@ end
 end
 end
 end
-if matches[1]:lower() == 'cmds' or matches[1] == 'دستورات' and is_owner(msg) then 
+if (matches[1]:lower() == 'cmds' or matches[1] == 'دستورات') and is_owner(msg) then 
 	if not lang then
 		if matches[2]:lower() == 'owner' then 
 		redis:hset('group:'..msg.to.id..':cmd', 'bot', 'owner') 
@@ -3419,7 +3420,6 @@ if matches[1]:lower() == 'cmds' or matches[1] == 'دستورات' and is_owner(m
 		redis:hset('group:'..msg.to.id..':cmd', 'bot', 'member') 
 		return 'cmds set for member or higher' 
 		end 
-		end
 	else
 		if matches[2] == 'مالک' then 
 		redis:hset('group:'..msg.to.id..':cmd', 'bot', 'owner') 
@@ -3469,7 +3469,7 @@ if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is
 			end
  tdcli.exportChatInviteLink(msg.to.id, callback_link, nil)
 		end
-		if matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید' and is_mod(msg) and matches[2] == 'pv' or matches[2] == 'خصوصی' then
+		if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is_mod(msg) and (matches[2] == 'pv' or matches[2] == 'خصوصی') then
 	local function callback_link (arg, data)
 		local result = data.invite_link_
 		local administration = load_data(_config.moderation.data) 
@@ -3486,7 +3486,7 @@ if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is
 					save_data(_config.moderation.data, administration)
         if not lang then
 		tdcli.sendMessage(user, msg.id, 1, "*Newlink Group* _:_ `"..msg.to.id.."`\n"..result, 1, 'md')
-       return tdcli.sendMessage(msg.to.id, msg.id, 1, "*Newlink Created and sended your pv*", 1, 'md')
+       return tdcli.sendMessage(msg.to.id, msg.id, 1, "*New link Was Send In Your Private Message*", 1, 'md')
         elseif lang then
 		tdcli.sendMessage(user, msg.id, 1, "*لینک جدید گروه* _:_ `"..msg.to.id.."`\n"..result, 1, 'md')
        return tdcli.sendMessage(msg.to.id, msg.id, 1, "_لینک جدید ساخته شد و در پیوی شما ارسال شد_", 1, 'md')
@@ -3495,7 +3495,7 @@ if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is
 			end
  tdcli.exportChatInviteLink(msg.to.id, callback_link, nil)
 		end
-		if matches[1]:lower() == 'setlink' or matches[1] == 'تنظیم لینک' and is_owner(msg) then
+		if (matches[1]:lower() == 'setlink' or matches[1] == 'تنظیم لینک') and is_owner(msg) then
 		if not matches[2] then
 		data[tostring(chat)]['settings']['linkgp'] = 'waiting'
 			save_data(_config.moderation.data, data)
@@ -3508,7 +3508,7 @@ if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is
 		 data[tostring(chat)]['settings']['linkgp'] = matches[2]
 			 save_data(_config.moderation.data, data)
       if not lang then
-			return 'Your group link has been saved'
+			return '_Group Link Was Saved Successfully._'
     else 
          return 'لینک گروه شما با موفقیت ذخیره شد'
        end
@@ -3552,20 +3552,15 @@ if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is
       end
       end
      if not lang then
-	 tdcli.sendMessage(chat, "", 1, "<b>Link Group has been sended your pv</b>", 1, 'html')
+	 tdcli.sendMessage(chat, msg.id, 1, "<b>link Was Send In Your Private Message</b>", 1, 'html')
      tdcli.sendMessage(user, "", 1, "<b>Group Link "..msg.to.title.." :</b>\n"..linkgp, 1, 'html')
      else
-	 tdcli.sendMessage(chat, "", 1, "<b>لینک گروه در پیوی  شما ارسال شد</b>", 1, 'html')
+	 tdcli.sendMessage(chat, msg.id, 1, "<b>لینک گروه در پیوی  شما ارسال شد</b>", 1, 'html')
       tdcli.sendMessage(user, "", 1, "<b>لینک گروه "..msg.to.title.." :</b>\n"..linkgp, 1, 'html')
          end
-      if not lang then
-        return "*Group Link Was Send In Your Private Message*"
-       else
-        return "_لینک گروه به چت خصوصی شما ارسال شد_"
-        end
      end
 	 end
-  if matches[1]:lower() == "setrules" or matches[1] == 'تنظیم قوانین' and matches[2] and is_mod(msg) then
+  if (matches[1]:lower() == "setrules" or matches[1] == 'تنظیم قوانین') and matches[2] and is_mod(msg) then
     data[tostring(chat)]['rules'] = matches[2]
 	  save_data(_config.moderation.data, data)
      if not lang then
@@ -3577,9 +3572,9 @@ if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is
   if matches[1]:lower() == "rules" or matches[1] == 'قوانین' then
  if not data[tostring(chat)]['rules'] then
    if not lang then
-     rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@kiavair"
+     rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@BeyondTeam"
     elseif lang then
-       rules = "ℹ️ قوانین پپیشفرض:\n1⃣ ارسال پیام مکرر ممنوع.\n2⃣ اسپم ممنوع.\n3⃣ تبلیغ ممنوع.\n4⃣ سعی کنید از موضوع خارج نشید.\n5⃣ هرنوع نژاد پرستی, شاخ بازی و پورنوگرافی ممنوع .\n➡️ از قوانین پیروی کنید, در صورت عدم رعایت قوانین اول اخطار و در صورت تکرار مسدود.\n@kiavair"
+       rules = "ℹ️ قوانین پپیشفرض:\n1⃣ ارسال پیام مکرر ممنوع.\n2⃣ اسپم ممنوع.\n3⃣ تبلیغ ممنوع.\n4⃣ سعی کنید از موضوع خارج نشید.\n5⃣ هرنوع نژاد پرستی, شاخ بازی و پورنوگرافی ممنوع .\n➡️ از قوانین پیروی کنید, در صورت عدم رعایت قوانین اول اخطار و در صورت تکرار مسدود.\n@BeyondTeam"
  end
         else
      rules = "*Group Rules :*\n"..data[tostring(chat)]['rules']
@@ -3611,7 +3606,7 @@ tdcli_function ({
      return "_حداکثر حروف مجاز در پیام تنظیم شد به :_ *[ "..matches[2].." ]*"
 		end
   end
-  if matches[1]:lower() == 'setflood' or matches[1] == 'تنظیم پیام مکرر' and is_mod(msg) then
+  if (matches[1]:lower() == 'setflood' or matches[1] == 'تنظیم پیام مکرر') and is_mod(msg) then
 			if tonumber(matches[2]) < 1 or tonumber(matches[2]) > 50 then
 				return "_Wrong number, range is_ *[2-50]*"
       end
@@ -3624,7 +3619,7 @@ tdcli_function ({
     return '_محدودیت پیام مکرر به_ *'..tonumber(matches[2])..'* _تنظیم شد._'
     end
        end
-  if matches[1]:lower() == 'setfloodtime' or matches[1] == 'تنظیم زمان بررسی' and is_mod(msg) then
+  if (matches[1]:lower() == 'setfloodtime' or matches[1] == 'تنظیم زمان بررسی') and is_mod(msg) then
 			if tonumber(matches[2]) < 2 or tonumber(matches[2]) > 10 then
 				return "_Wrong number, range is_ *[2-10]*"
       end
@@ -3637,7 +3632,7 @@ tdcli_function ({
     return "_حداکثر زمان بررسی پیام های مکرر تنظیم شد به :_ *[ "..matches[2].." ]*"
     end
        end
-		if matches[1]:lower() == 'clean' or matches[1] == 'پاک کردن' and is_owner(msg) then
+		if (matches[1]:lower() == 'clean' or matches[1] == 'پاک کردن') and is_owner(msg) then
 		if not lang then
 			if matches[2] == 'mods' then
 				if next(data[tostring(chat)]['mods']) == nil then
@@ -3739,7 +3734,7 @@ tdcli_function ({
 			
 			end
         end
-		if matches[1]:lower() == 'clean' or matches[1] == 'پاک کردن' and is_admin(msg) then
+		if (matches[1]:lower() == 'clean' or matches[1] == 'پاک کردن') and is_admin(msg) then
 		if not lang then
 			if matches[2] == 'owners' then
 				if next(data[tostring(chat)]['owners']) == nil then
@@ -3799,10 +3794,10 @@ end
   if matches[1]:lower() == 'unfilter' or matches[1] == 'حذف فیلتر' then
     return unfilter_word(msg, matches[2])
   end
-  if matches[1]:lower() == 'config' or matches[1] == 'پیکربندی' and is_admin(msg) then
+  if (matches[1]:lower() == 'config' or matches[1] == 'پیکربندی') and is_admin(msg) then
 tdcli.getChannelMembers(msg.to.id, 0, 'Administrators', 200, config_cb, {chat_id=msg.to.id})
   end
-  if matches[1]:lower() == 'filterlist' or matches[1] == 'لیست فیلتر' and is_mod(msg) then
+  if (matches[1]:lower() == 'filterlist' or matches[1] == 'لیست فیلتر') and is_mod(msg) then
     return filter_list(msg)
   end
 if matches[1]:lower() == "modlist" or matches[1] == 'لیست مدیران' then
@@ -3811,13 +3806,13 @@ end
 if (matches[1]:lower() == "whitelist" or matches[1] == 'لیست سفید') and not matches[2] then
 return whitelist(msg.to.id)
 end
-if matches[1]:lower() == "ownerlist" or matches[1] == 'لیست مالکان' and is_owner(msg) then
+if (matches[1]:lower() == "ownerlist" or matches[1] == 'لیست مالکان') and is_owner(msg) then
 return ownerlist(msg)
 end
-if matches[1]:lower() == "settings" or matches[1] == 'تنظیمات' and is_mod(msg) then
+if (matches[1]:lower() == "settings" or matches[1] == 'تنظیمات') and is_mod(msg) then
 return group_settings(msg, target)
 end
-if matches[1]:lower() == "mutelist" or matches[1] == 'لیست بیصدا' and is_mod(msg) then
+if (matches[1]:lower() == "mutelist" or matches[1] == 'لیست بیصدا') and is_mod(msg) then
 return mutes(msg, target)
 end
 if matches[1]:lower() == "setlang" and is_owner(msg) then
@@ -3834,7 +3829,7 @@ local lang = redis:get(hash)
  redis:del(hash)
 return "_Group Language Set To:_ EN"..BDRpm
 end
- if matches[1] == 'mutetime' or matches[1] == 'زمان بیصدا' and is_mod(msg) then
+ if (matches[1] == 'mutetime' or matches[1] == 'زمان بیصدا') and is_mod(msg) then
 local hash = 'muteall:'..msg.to.id
 local hour = tonumber(matches[2])
 local num1 = (tonumber(hour) * 3600)
@@ -3850,7 +3845,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[2].."\n⏺ دقیقه : "..matches[3].."\n⏺ ثانیه : "..matches[4]..BDRpm
  end
  end
- if matches[1] == 'mutehours' or matches[1]== 'ساعت بیصدا' and is_mod(msg) then
+ if (matches[1] == 'mutehours' or matches[1]== 'ساعت بیصدا') and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
 local hour = matches[2]
 local num1 = tonumber(hour) * 3600
@@ -3862,7 +3857,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[2]..BDRpm
  end
  end
-  if matches[1] == 'muteminutes' or matches[1]== 'دقیقه بیصدا'  and is_mod(msg) then
+  if (matches[1] == 'muteminutes' or matches[1]== 'دقیقه بیصدا')  and is_mod(msg) then
  local hash = 'muteall:'..msg.to.id
 local minutes = matches[2]
 local num2 = tonumber(minutes) * 60
@@ -3874,7 +3869,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ دقیقه : "..matches[2]..BDRpm
  end
  end
-  if matches[1] == 'muteseconds' or matches[1] == 'ثانیه بیصدا'  and is_mod(msg) then
+  if (matches[1] == 'muteseconds' or matches[1] == 'ثانیه بیصدا') and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
 local second = matches[2]
 local num3 = tonumber(second) 
@@ -3905,10 +3900,10 @@ if not lang then
 		end
   end
 
-if matches[1]:lower() == "help" or matches[1] == 'راهنما' and is_mod(msg) then
+if (matches[1]:lower() == "help" or matches[1] == 'راهنما') and is_mod(msg) then
 if not lang then
 text = [[
-*Kiava Bot Commands:*
+*Beyond Bot Commands:*
 *!setmanager* `[username|id|reply]` 
 _Add User To Group Admins(CreatorBot)_
 *!Remmanager* `[username|id|reply]` 
@@ -4196,6 +4191,7 @@ end
      end
 	end
 end
+end
 local checkmod = true
 -----------------------------------------
 local function pre_process(msg)
@@ -4205,8 +4201,9 @@ local hash = "gp_lang:"..chat
 local lang = redis:get(hash)
 local data = load_data(_config.moderation.data)
  if checkmod and msg.text and msg.to.type == 'channel' then
-	local secchk = true
 	tdcli.getChannelMembers(msg.to.id, 0, 'Administrators', 200, function(a, b)
+	local secchk = true
+	checkmod = false
 		for k,v in pairs(b.members_) do
 			if v.user_id_ == tonumber(our_id) then
 				secchk = false
@@ -4240,9 +4237,9 @@ local data = load_data(_config.moderation.data)
 rules = administration[arg.chat_id]['rules']
 else
    if not lang then
-     rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@kiavair"
+     rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@BeyondTeam"
     elseif lang then
-       rules = "ℹ️ قوانین پپیشفرض:\n1⃣ ارسال پیام مکرر ممنوع.\n2⃣ اسپم ممنوع.\n3⃣ تبلیغ ممنوع.\n4⃣ سعی کنید از موضوع خارج نشید.\n5⃣ هرنوع نژاد پرستی, شاخ بازی و پورنوگرافی ممنوع .\n➡️ از قوانین پیروی کنید, در صورت عدم رعایت قوانین اول اخطار و در صورت تکرار مسدود.\n@kiavair"
+       rules = "ℹ️ قوانین پپیشفرض:\n1⃣ ارسال پیام مکرر ممنوع.\n2⃣ اسپم ممنوع.\n3⃣ تبلیغ ممنوع.\n4⃣ سعی کنید از موضوع خارج نشید.\n5⃣ هرنوع نژاد پرستی, شاخ بازی و پورنوگرافی ممنوع .\n➡️ از قوانین پیروی کنید, در صورت عدم رعایت قوانین اول اخطار و در صورت تکرار مسدود.\n@BeyondTeam"
  end
 end
 if data.username_ then
@@ -4438,7 +4435,6 @@ patterns_fa = {
 '^(باز) (.*)$',
 '^(بیصدا) (.*)$',
 '^(باصدا) (.*)$',
-'^(دستورات) (.*)$',
 '^(لینک جدید)$',
 '^(لینک جدید) (خصوصی)$',
 '^(اطلاعات گروه)$',
@@ -4483,4 +4479,4 @@ run=run,
 pre_process = pre_process
 }
 
--- ## @kiavair
+-- ## @BeyondTeam
