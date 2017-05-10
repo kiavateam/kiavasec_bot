@@ -427,7 +427,7 @@ end
 
 
 --------------------------------
-if matches[1]:lower() == "solved" then
+if matches[1]:lower() == "solved"  or matches[1] == "حل شده" then
 local hash = "gp_lang:"..msg.to.id
 local lang = redis:get(hash)
 if not lang then
@@ -484,6 +484,7 @@ command ..	"([Ss]ticker) (.+)$",
 		}, 
 		patterns_fa = {
   "^(راهنمای سرگرمی)$",
+	  "^(حل شده)$",
   "^(اب و هوا) (.*)$",
 	"^(حساب کن) (.*)$",
 	"^(ساعت)$",
