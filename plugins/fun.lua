@@ -412,10 +412,45 @@ end
 
 end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------
+if matches[1]:lower() == "solved" then
+local hash = "gp_lang:"..msg.to.id
+local lang = redis:get(hash)
+if not lang then
+solved = [[
+ nakon jakesh 😑🖕🏻
+]]
+tdcli.sendMessage(msg.chat_id_, 0, 1, solved, 1, 'md')
+else
+
+solved = [[
+
+		 نکن کیری 😑🖕🏻
+		]]
+tdcli.sendMessage(msg.chat_id_, 0, 1, solved, 1, 'md')
+end
+
+end
+end
 --------------------------------
 return {               
 	patterns = {
 command ..  "([Hh]elpfun)$",
+	command ..  "([Ss]olved)$",
 command ..  "([Ww]eather) (.*)$",
 command ..	"([Cc]alc) (.*)$",
 command ..	"([Tt]ime)$",
@@ -431,6 +466,7 @@ command ..	"([Ss]hort) (.*)$",
 command ..	"([Pp]hoto) (.+)$",
 command ..	"([Ss]ticker) (.+)$",
 	"^([Hh]elpfun)$",
+	"^([Ss]olved)$",
 	"^([Ww]eather) (.*)$",
 	"^([Cc]alc) (.*)$",
 	"^([Tt]ime)$",
