@@ -2,6 +2,7 @@
 local TIME_CHECK = 2
 
 local function pre_process(msg)
+--print(serpent.block(msg))
 local data = load_data(_config.moderation.data)
 local chat = msg.to.id
 local user = msg.from.id
@@ -46,7 +47,7 @@ redis:setex('autodeltime', 14400, true)
      run_bash("rm -rf ~/.telegram-cli/data/document/*")
      run_bash("rm -rf ~/.telegram-cli/data/profile_photo/*")
      run_bash("rm -rf ~/.telegram-cli/data/encrypted/*")
-	 run_bash("rm -rf ./photos/*")
+	 run_bash("rm -rf ./data/photos/*")
 end
     if data[tostring(chat)] and data[tostring(chat)]['mutes'] then
 		mutes = data[tostring(chat)]['mutes']
@@ -494,11 +495,167 @@ redis:setex('sender:'..user..':flood', 30, true)
            end
       end
    end
-   return msg
+ --[[    if msg.to.type ~= 'pv' then
+chat = msg.to.id
+user = msg.from.id
+	local function check_newmember(arg, data)
+		test = load_data(_config.moderation.data)
+		lock_bots = test[arg.chat_id]['settings']['lock_bots']
+local hash = "gp_lang:"..msg.to.id
+local lang = redis:get(hash)
+    if data.type_.ID == "UserTypeBot" then
+      if not is_owner(arg.msg) and lock_bots == 'yes' then
+kick_user(data.id_, arg.chat_id)
+end
+end
+if data.username_ then
+user_name = '@'..check_markdown(data.username_)
+else
+user_name = check_markdown(data.first_name_)
+end
+if is_banned(data.id_, arg.chat_id) then
+if not lang then
+		tdcli.sendMessage(arg.chat_id, arg.msg_id, 0, "_User_ "..user_name.." *[ "..data.id_.." ]* _is banned_", 0, "md")
+   else
+		tdcli.sendMessage(arg.chat_id, arg.msg_id, 0, "_کاربر_ "..user_name.." *[ "..data.id.."]*_banned_", 0, "md")
+end
+kick_user(data.id_, arg.chat_id)
+end
+if is_gbanned(data.id_) then
+if not lang then
+		tdcli.sendMessage(arg.chat_id, arg.msg_id, 0, "_User_ "..user_name.." *[ "..data.id_.." ]* _is globally banned_", 0, "md")
+       else
+		tdcli.sendMessage(arg.chat_id, arg.msg_id, 0, "_کاربر_ "..user_name.." *[ "..data.id_.." ]* _از تمام گروه های ربات محروم است_", 0, "md")
+   end
+kick_user(data.id_, arg.chat_id)
+     end
+	end
+	if msg.adduser then
+			tdcli_function ({
+	      ID = "GetUser",
+      	user_id_ = msg.adduser
+    	}, check_newmember, {chat_id=chat,msg_id=msg.id,user_id=user,msg=msg})
+	end
+	if msg.joinuser then
+			tdcli_function ({
+	      ID = "GetUser",
+      	user_id_ = msg.joinuser
+    	}, check_newmember, {chat_id=chat,msg_id=msg.id,user_id=user,msg=msg})
+	   end
+ if is_silent_user(msg.from.id, msg.to.id) then
+ del_msg(msg.to.id, msg.id)
+    return false
+ end
+ if is_banned(msg.from.id, msg.to.id) then
+ del_msg(msg.to.id, tonumber(msg.id))
+     kick_user(msg.from.id, msg.to.id)
+    return false
+    end
+ if is_gbanned(msg.from.id) then
+ del_msg(msg.to.id, tonumber(msg.id))
+     kick_user(msg.from.id, msg.to.id)
+    return false
+   end
+ end
+ local function welcome_cb(arg, data)
+	local url , res = http.request('http://irapi.ir/time/')
+          if res ~= 200 then return "No connection" end
+      local jdat = json:decode(url)
+		administration = load_data(_config.moderation.data)
+    if administration[arg.chat_id]['setwelcome'] then
+     welcome = administration[arg.chat_id]['setwelcome']
+      else
+     if not lang then
+     welcome = "*Welcome Dude*"
+    elseif lang then
+     welcome = "_خوش آمدید_"
+        end
+     end
+ if administration[tostring(arg.chat_id)]['rules'] then
+rules = administration[arg.chat_id]['rules']
+else
+   if not lang then
+     rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@BeyondTeam"
+    elseif lang then
+       rules = "ℹ️ قوانین پپیشفرض:\n1⃣ ارسال پیام مکرر ممنوع.\n2⃣ اسپم ممنوع.\n3⃣ تبلیغ ممنوع.\n4⃣ سعی کنید از موضوع خارج نشید.\n5⃣ هرنوع نژاد پرستی, شاخ بازی و پورنوگرافی ممنوع .\n➡️ از قوانین پیروی کنید, در صورت عدم رعایت قوانین اول اخطار و در صورت تکرار مسدود.\n@BeyondTeam"
+ end
+end
+if data.username_ then
+user_name = "@"..check_markdown(data.username_)
+else
+user_name = ""
+end
+		local welcome = welcome:gsub("{rules}", rules)
+		local welcome = welcome:gsub("{name}", check_markdown(data.first_name_..' '..(data.last_name_ or '')))
+		local welcome = welcome:gsub("{username}", user_name)
+		local welcome = welcome:gsub("{time}", jdat.ENtime)
+		local welcome = welcome:gsub("{date}", jdat.ENdate)
+		local welcome = welcome:gsub("{timefa}", jdat.FAtime)
+		local welcome = welcome:gsub("{datefa}", jdat.FAdate)
+		local welcome = welcome:gsub("{gpname}", arg.gp_name)
+		tdcli.sendMessage(arg.chat_id, arg.msg_id, 0, welcome, 0, "md")
+	end
+	if data[tostring(chat)] and data[tostring(chat)]['settings'] then
+	if msg.adduser then
+		welcome = data[tostring(msg.to.id)]['settings']['welcome']
+		if welcome == "yes" then
+			tdcli.getUser(msg.adduser, welcome_cb, {chat_id=chat,msg_id=msg.id_,gp_name=msg.to.title})
+		else
+			return false
+		end
+	end
+	if msg.joinuser then
+		welcome = data[tostring(msg.to.id)]['settings']['welcome']
+		if welcome == "yes" then
+			tdcli.getUser(msg.sender_user_id_, welcome_cb, {chat_id=chat,msg_id=msg.id_,gp_name=msg.to.title})
+		else
+			return false
+        end
+		end
+	end
+	if msg.to.type ~= 'pv' then
+		local hash = "gp_lang:"..msg.to.id
+		local lang = redis:get(hash)
+		local data = load_data(_config.moderation.data)
+		local gpst = data[tostring(msg.to.id)]
+		local chex = redis:get('CheckExpire::'..msg.to.id)
+		local exd = redis:get('ExpireDate:'..msg.to.id)
+		if gpst and not chex and msg.from.id ~= SUDO and not is_sudo(msg) then
+			redis:set('CheckExpire::'..msg.to.id,true)
+			redis:set('ExpireDate:'..msg.to.id,true)
+			redis:setex('ExpireDate:'..msg.to.id, 86400, true)
+			if lang then
+				tdcli.sendMessage(msg.to.id, msg.id_, 1, '_گروه به مدت 1 روز شارژ شد. لطفا با سودو برای شارژ بیشتر تماس بگیرید. در غیر اینصورت گروه شما از لیست ربات حذف و ربات گروه را ترک خواهد کرد._', 1, 'md')
+			else
+				tdcli.sendMessage(msg.to.id, msg.id_, 1, '_Group charged 1 day. to recharge the robot contact with the sudo. With the completion of charging time, the group removed from the robot list and the robot will leave the group._', 1, 'md')
+			end
+		end
+		if chex and not exd and msg.from.id ~= SUDO and not is_sudo(msg) then
+			local text1 = 'شارژ این گروه به اتمام رسید \n\nID:  <code>'..msg.to.id..'</code>\n\nدر صورتی که میخواهید ربات این گروه را ترک کند از دستور زیر استفاده کنید\n\n/leave '..msg.to.id..'\nبرای جوین دادن توی این گروه میتونی از دستور زیر استفاده کنی:\n/jointo '..msg.to.id..'\n_________________\nدر صورتی که میخواهید گروه رو دوباره شارژ کنید میتوانید از کد های زیر استفاده کنید...\n\n<b>برای شارژ 1 ماهه:</b>\n/plan 1 '..msg.to.id..'\n\n<b>برای شارژ 3 ماهه:</b>\n/plan 2 '..msg.to.id..'\n\n<b>برای شارژ نامحدود:</b>\n/plan 3 '..msg.to.id
+			local text2 = '_شارژ این گروه به پایان رسید. به دلیل عدم شارژ مجدد، گروه از لیست ربات حذف و ربات از گروه خارج میشود._'
+			local text3 = '_Charging finished._\n\n*Group ID:*\n\n*ID:* `'..msg.to.id..'`\n\n*If you want the robot to leave this group use the following command:*\n\n`/Leave '..msg.to.id..'`\n\n*For Join to this group, you can use the following command:*\n\n`/Jointo '..msg.to.id..'`\n\n_________________\n\n_If you want to recharge the group can use the following code:_\n\n*To charge 1 month:*\n\n`/Plan 1 '..msg.to.id..'`\n\n*To charge 3 months:*\n\n`/Plan 2 '..msg.to.id..'`\n\n*For unlimited charge:*\n\n`/Plan 3 '..msg.to.id..'`'
+			local text4 = '_Charging finished. Due to lack of recharge remove the group from the robot list and the robot leave the group._'
+			if lang then
+				tdcli.sendMessage(SUDO, 0, 1, text1, 1, 'html')
+				tdcli.sendMessage(msg.to.id, 0, 1, text2, 1, 'md')
+			else
+				tdcli.sendMessage(SUDO, 0, 1, text3, 1, 'md')
+				tdcli.sendMessage(msg.to.id, 0, 1, text4, 1, 'md')
+			end
+			botrem(msg)
+		else
+			local expiretime = redis:ttl('ExpireDate:'..msg.to.id)
+			local day = (expiretime / 86400)
+			if tonumber(day) > 0.208 and not is_sudo(msg) and is_mod(msg) then
+				warning(msg)
+			end
+		end
+	end
+   return msg]]
 end
 return {
 	patterns = {},
-	patterns_fa = {},
+	--patterns_fa = {},
 	pre_process = pre_process
 }
 --End msg_checks.lua--
