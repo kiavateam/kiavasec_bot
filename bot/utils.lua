@@ -71,7 +71,7 @@ end
 --  Saves file to /tmp/. If file_name isn't provided,
 -- will get the text after the last "/" for filename
 -- do ski
-BDRpm = '\n@kiavair'
+BDRpm = '\n@BeyondTeam'
 -- Waiting for ski:)
 -- and content-type for extension
 function download_to_file(url, file_name)
@@ -740,3 +740,4 @@ else
          end
      return filterlist
    end
+
