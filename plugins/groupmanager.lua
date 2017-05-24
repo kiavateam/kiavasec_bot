@@ -19,50 +19,40 @@ return 'گروه در لیست گروه های مدیریتی ربات هم اک
 end
         -- create data array in moderation.json
       data[tostring(msg.to.id)] = {
-			owners = {},
-			mods ={},
-			banned ={},
-			is_silent_users ={},
-			filterlist ={},
-			whitelist ={},
-			rules ={},
-			settings = {
-				set_name = msg.to.title,
-				lock_link = 'yes',
-				lock_tag = 'yes',
-				lock_spam = 'yes',
-				lock_webpage = 'no',
-				lock_mention = 'no',
-				lock_markdown = 'no',
-				lock_flood = 'yes',
-				lock_bots = 'yes',
-				lock_pin = 'no',
-				welcome = 'no',
-				lock_join = 'no',
-				lock_edit = 'no',
-				lock_arabic = 'no',
-				lock_all = 'no',
-				num_msg_max = '5',
-				set_char = '40',
-				time_check = '2',
-				},
-			mutes = {
-				mute_fwd = 'no',
-				mute_audio = 'no',
-				mute_video = 'no',
-				mute_contact = 'no',
-				mute_text = 'no',
-				mute_photos = 'no',
-				mute_gif = 'no',
-				mute_loc = 'no',
-				mute_doc = 'no',
-				mute_sticker = 'no',
-				mute_voice = 'no',
-				mute_all = 'no',
-				mute_keyboard = 'no',
-				mute_game = 'no',
-				mute_inline = 'no',
-				mute_tgservice = 'no',
+              owners = {},
+      mods ={},
+      banned ={},
+      is_silent_users ={},
+      filterlist ={},
+      whitelist ={},
+      settings = {
+          set_name = msg.to.title,
+          lock_link = 'yes',
+          lock_tag = 'yes',
+          lock_spam = 'yes',
+          lock_webpage = 'no',
+          lock_mention = 'no',
+          lock_markdown = 'no',
+          lock_flood = 'yes',
+          lock_bots = 'yes',
+          lock_pin = 'no',
+          welcome = 'no',
+		  lock_join = 'no',
+          },
+   mutes = {
+                  mute_fwd = 'no',
+                  mute_audio = 'no',
+                  mute_video = 'no',
+                  mute_contact = 'no',
+                  mute_text = 'no',
+                  mute_photos = 'no',
+                  mute_gif = 'no',
+                  mute_loc = 'no',
+                  mute_doc = 'no',
+                  mute_sticker = 'no',
+                  mute_voice = 'no',
+                   mute_all = 'no',
+				   mute_keyboard = 'no'
           }
       }
   save_data(_config.moderation.data, data)
@@ -107,8 +97,7 @@ else
       if not data[tostring(groups)] then
         data[tostring(groups)] = nil
         save_data(_config.moderation.data, data)
-      end
-       data[tostring(groups)][tostring(msg.to.id)] = nil
+      end data[tostring(groups)][tostring(msg.to.id)] = nil
       save_data(_config.moderation.data, data)
  if not lang then
   return '*Group has been removed*'
@@ -120,7 +109,7 @@ end
  local function config_cb(arg, data)
 local hash = "gp_lang:"..arg.chat_id
 local lang = redis:get(hash)
-  --print(serpent.block(data))
+  print(serpent.block(data))
    for k,v in pairs(data.members_) do
    local function config_mods(arg, data)
        local administration = load_data(_config.moderation.data)
@@ -143,7 +132,7 @@ tdcli_function ({
 if data.members_[k].status_.ID == "ChatMemberStatusCreator" then
 owner_id = v.user_id_
    local function config_owner(arg, data)
- -- print(serpent.block(data))
+  print(serpent.block(data))
        local administration = load_data(_config.moderation.data)
 if data.username_ then
 user_name = '@'..check_markdown(data.username_)
@@ -1518,89 +1507,6 @@ end
 end
 end
 
----------------Lock All-------------------
-local function lock_all(msg, data, target) 
-local hash = "gp_lang:"..msg.to.id
-local lang = redis:get(hash)
-if not is_mod(msg) then
-if not lang then
- return "_You're Not_ *Moderator*"
-else
- return "شما مدیر گروه نمیباشید"
-end
-end
-
-local lock_all = data[tostring(target)]["settings"]["lock_all"] 
-if lock_all == "yes" then
-if not lang then
- return "*All Settings* _Is Already Locked_"
-elseif lang then
- return "تمامی تنظیمات قفل بودند!"
-end
-else
- data[tostring(target)]["settings"]["lock_all"] = "yes"
- data[tostring(target)]["settings"]["lock_pin"] = "yes"
- data[tostring(target)]["settings"]["lock_webpage"] = "yes"
- data[tostring(target)]["settings"]["lock_link"] = "yes"
- data[tostring(target)]["settings"]["lock_tag"] = "yes"
- data[tostring(target)]["settings"]["lock_mention"] = "yes"
- data[tostring(target)]["settings"]["lock_markdown"] = "yes"
- data[tostring(target)]["settings"]["lock_arabic"] = "yes"
- data[tostring(target)]["settings"]["lock_edit"] = "yes"
- data[tostring(target)]["settings"]["lock_spam"] = "yes"
- data[tostring(target)]["settings"]["lock_bots"] = "yes"
- data[tostring(target)]["settings"]["lock_flood"] = "yes"
- data[tostring(target)]["settings"]["lock_join"] = "yes"
-save_data(_config.moderation.data, data) 
-if not lang then
- return "*All Settings* _Has Been Locked_"
-else
- return "تمامی تنظیمات قفل بود!"
-end
-end
-end
-
-local function unlock_all(msg, data, target)
-local hash = "gp_lang:"..msg.to.id
-local lang = redis:get(hash)
- if not is_mod(msg) then
-if not lang then
-return "_You're Not_ *Moderator*"
-else
-return "شما مدیر گروه نمیباشید"
-end 
-end
-
-local lock_all = data[tostring(target)]["settings"]["lock_all"]
- if lock_all == "no" then
-if not lang then
-return "*All Settings* _Is Not Locked_" 
-elseif lang then
-return "تمامی تنظیمات قفل نیستند!"
-end
-else 
- data[tostring(target)]["settings"]["lock_all"] = "no"
- data[tostring(target)]["settings"]["lock_pin"] = "no"
- data[tostring(target)]["settings"]["lock_webpage"] = "no"
- data[tostring(target)]["settings"]["lock_link"] = "no"
- data[tostring(target)]["settings"]["lock_tag"] = "no"
- data[tostring(target)]["settings"]["lock_mention"] = "no"
- data[tostring(target)]["settings"]["lock_markdown"] = "no"
- data[tostring(target)]["settings"]["lock_arabic"] = "no"
- data[tostring(target)]["settings"]["lock_edit"] = "no"
- data[tostring(target)]["settings"]["lock_spam"] = "no"
- data[tostring(target)]["settings"]["lock_bots"] = "no"
- data[tostring(target)]["settings"]["lock_flood"] = "no"
- data[tostring(target)]["settings"]["lock_join"] = "no"
-save_data(_config.moderation.data, data) 
-if not lang then
-return "*All Settings* _Has Been Unlocked_" 
-else
-return "تمامی تنظیمات آزاد شدند!"
-end
-end
-end
-
 ---------------Lock Pin-------------------
 local function lock_pin(msg, data, target) 
 local hash = "gp_lang:"..msg.to.id
@@ -1764,12 +1670,6 @@ end
  data[tostring(target)]["settings"]["lock_pin"] = "no"		
  end
  end
-
- if data[tostring(target)]["settings"] then		
- if not data[tostring(target)]["settings"]["lock_all"] then			
- data[tostring(target)]["settings"]["lock_all"] = "no"		
- end
- end
 if data[tostring(target)]["settings"] then		
  if not data[tostring(target)]["settings"]["lock_join"] then			
  data[tostring(target)]["settings"]["lock_join"] = "no"		
@@ -1812,10 +1712,10 @@ local cmdss = redis:hget('group:'..msg.to.id..':cmd', 'bot')
 	end
 if not lang then
 local settings = data[tostring(target)]["settings"] 
-text = "*Group Settings:*\n_Lock edit :_ *"..settings.lock_edit.."*\n_Lock links :_ *"..settings.lock_link.."*\n_Lock tags :_ *"..settings.lock_tag.."*\n_Lock Join :_ *"..settings.lock_join.."*\n_Lock flood :_ *"..settings.lock_flood.."*\n_Lock spam :_ *"..settings.lock_spam.."*\n_Lock mention :_ *"..settings.lock_mention.."*\n_Lock arabic :_ *"..settings.lock_arabic.."*\n_Lock webpage :_ *"..settings.lock_webpage.."*\n_Lock markdown :_ *"..settings.lock_markdown.."*\n_Group welcome :_ *"..settings.welcome.."*\n_Lock pin message :_ *"..settings.lock_pin.."*\n_Bots protection :_ *"..settings.lock_bots.."*\n_Lock all :_ *"..settings.lock_all.."*\n_Flood sensitivity :_ *"..NUM_MSG_MAX.."*\n_Character sensitivity :_ *"..SETCHAR.."*\n_Flood check time :_ *"..TIME_CHECK.."*\n*____________________*\n_Bot Commands :_ *"..cmdsss.."*\n_Expire Date :_ *"..expire_date.."*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
+text = "*Group Settings:*\n_Lock edit :_ *"..settings.lock_edit.."*\n_Lock links :_ *"..settings.lock_link.."*\n_Lock tags :_ *"..settings.lock_tag.."*\n_Lock Join :_ *"..settings.lock_join.."*\n_Lock flood :_ *"..settings.lock_flood.."*\n_Lock spam :_ *"..settings.lock_spam.."*\n_Lock mention :_ *"..settings.lock_mention.."*\n_Lock arabic :_ *"..settings.lock_arabic.."*\n_Lock webpage :_ *"..settings.lock_webpage.."*\n_Lock markdown :_ *"..settings.lock_markdown.."*\n_Group welcome :_ *"..settings.welcome.."*\n_Lock pin message :_ *"..settings.lock_pin.."*\n_Bots protection :_ *"..settings.lock_bots.."*\n_Flood sensitivity :_ *"..NUM_MSG_MAX.."*\n_Character sensitivity :_ *"..SETCHAR.."*\n_Flood check time :_ *"..TIME_CHECK.."*\n*____________________*\n_Bot Commands :_ *"..cmdsss.."*\n_Expire Date :_ *"..expire_date.."*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
 else
 local settings = data[tostring(target)]["settings"] 
- text = "*تنظیمات گروه:*\n_قفل ویرایش پیام :_ *"..settings.lock_edit.."*\n_قفل لینک :_ *"..settings.lock_link.."*\n_قفل ورود :_ *"..settings.lock_join.."*\n_قفل تگ :_ *"..settings.lock_tag.."*\n_قفل پیام مکرر :_ *"..settings.lock_flood.."*\n_قفل هرزنامه :_ *"..settings.lock_spam.."*\n_قفل فراخوانی :_ *"..settings.lock_mention.."*\n_قفل عربی :_ *"..settings.lock_arabic.."*\n_قفل صفحات وب :_ *"..settings.lock_webpage.."*\n_قفل فونت :_ *"..settings.lock_markdown.."*\n_پیام خوشآمد گویی :_ *"..settings.welcome.."*\n_قفل سنجاق کردن :_ *"..settings.lock_pin.."*\n_محافظت در برابر ربات ها :_ *"..settings.lock_bots.."*\n_قفل همه :_ *"..settings.lock_all.."*\n_حداکثر پیام مکرر :_ *"..NUM_MSG_MAX.."*\n_حداکثر حروف مجاز :_ *"..SETCHAR.."*\n_زمان بررسی پیام های مکرر :_ *"..TIME_CHECK.."*\n*____________________*\n_دستورات ربات :_ *"..cmdsss.."*\n_تاریخ انقضا :_ *"..expire_date.."*\n*کانال ما*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
+ text = "*تنظیمات گروه:*\n_قفل ویرایش پیام :_ *"..settings.lock_edit.."*\n_قفل لینک :_ *"..settings.lock_link.."*\n_قفل ورود :_ *"..settings.lock_join.."*\n_قفل تگ :_ *"..settings.lock_tag.."*\n_قفل پیام مکرر :_ *"..settings.lock_flood.."*\n_قفل هرزنامه :_ *"..settings.lock_spam.."*\n_قفل فراخوانی :_ *"..settings.lock_mention.."*\n_قفل عربی :_ *"..settings.lock_arabic.."*\n_قفل صفحات وب :_ *"..settings.lock_webpage.."*\n_قفل فونت :_ *"..settings.lock_markdown.."*\n_پیام خوشآمد گویی :_ *"..settings.welcome.."*\n_قفل سنجاق کردن :_ *"..settings.lock_pin.."*\n_محافظت در برابر ربات ها :_ *"..settings.lock_bots.."*\n_حداکثر پیام مکرر :_ *"..NUM_MSG_MAX.."*\n_حداکثر حروف مجاز :_ *"..SETCHAR.."*\n_زمان بررسی پیام های مکرر :_ *"..TIME_CHECK.."*\n*____________________*\n_دستورات ربات :_ *"..cmdsss.."*\n_تاریخ انقضا :_ *"..expire_date.."*\n*کانال ما*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
 end
 text = string.gsub(text, 'yes', '✅')
 text = string.gsub(text, 'no', '❌')
@@ -2840,310 +2740,13 @@ elseif tonumber(check_time) > 86400 then
 end
 if not lang then
 local mutes = data[tostring(target)]["mutes"] 
-  text = "*Group Mute List* : \n_Mute gif :_ *"..mutes.mute_gif.."*\n_Mute text :_ *"..mutes.mute_text.."*\n_Mute inline :_ *"..mutes.mute_inline.."*\n_Mute game :_ *"..mutes.mute_game.."*\n_Mute photo :_ *"..mutes.mute_photo.."*\n_Mute video :_ *"..mutes.mute_video.."*\n_Mute audio :_ *"..mutes.mute_audio.."*\n_Mute voice :_ *"..mutes.mute_voice.."*\n_Mute sticker :_ *"..mutes.mute_sticker.."*\n_Mute contact :_ *"..mutes.mute_contact.."*\n_Mute forward :_ *"..mutes.mute_forward.."*\n_Mute location :_ *"..mutes.mute_location.."*\n_Mute document :_ *"..mutes.mute_document.."*\n_Mute TgService :_ *"..mutes.mute_tgservice.."*\n_Mute Keyboard :_ *"..mutes.mute_keyboard.."*\n_Mute All :_ "..mute_all1.."\n*____________________*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
+  text = " *Group Mute List* : \n_Mute gif :_ *"..mutes.mute_gif.."*\n_Mute text :_ *"..mutes.mute_text.."*\n_Mute inline :_ *"..mutes.mute_inline.."*\n_Mute game :_ *"..mutes.mute_game.."*\n_Mute photo :_ *"..mutes.mute_photo.."*\n_Mute video :_ *"..mutes.mute_video.."*\n_Mute audio :_ *"..mutes.mute_audio.."*\n_Mute voice :_ *"..mutes.mute_voice.."*\n_Mute sticker :_ *"..mutes.mute_sticker.."*\n_Mute contact :_ *"..mutes.mute_contact.."*\n_Mute forward :_ *"..mutes.mute_forward.."*\n_Mute location :_ *"..mutes.mute_location.."*\n_Mute document :_ *"..mutes.mute_document.."*\n_Mute TgService :_ *"..mutes.mute_tgservice.."*\n_Mute Keyboard :_ *"..mutes.mute_keyboard.."*\n_Mute All :_ "..mute_all1.."\n*____________________*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
 else
 local mutes = data[tostring(target)]["mutes"] 
- text = "*لیست بیصدا ها* : \n_بیصدا تصاویر متحرک :_ *"..mutes.mute_gif.."*\n_بیصدا متن :_ *"..mutes.mute_text.."*\n_بیصدا کیبورد شیشه ای :_ *"..mutes.mute_inline.."*\n_بیصدا بازی های تحت وب :_ *"..mutes.mute_game.."*\n_بیصدا عکس :_ *"..mutes.mute_photo.."*\n_بیصدا فیلم :_ *"..mutes.mute_video.."*\n_بیصدا آهنگ :_ *"..mutes.mute_audio.."*\n_بیصدا صدا :_ *"..mutes.mute_voice.."*\n_بیصدا برچسب :_ *"..mutes.mute_sticker.."*\n_بیصدا مخاطب :_ *"..mutes.mute_contact.."*\n_بیصدا نقل قول :_ *"..mutes.mute_forward.."*\n_بیصدا موقعیت :_ *"..mutes.mute_location.."*\n_بیصدا اسناد :_ *"..mutes.mute_document.."*\n_بیصدا خدمات تلگرام :_ *"..mutes.mute_tgservice.."*\n_بیصدا صفحه کلید :_ *"..mutes.mute_keyboard.."*\n_بیصدا همه پیام ها :_ "..mute_all2.."\n*____________________*\n*Bot channel*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
+ text = " *لیست بیصدا ها* : \n_بیصدا تصاویر متحرک :_ *"..mutes.mute_gif.."*\n_بیصدا متن :_ *"..mutes.mute_text.."*\n_بیصدا کیبورد شیشه ای :_ *"..mutes.mute_inline.."*\n_بیصدا بازی های تحت وب :_ *"..mutes.mute_game.."*\n_بیصدا عکس :_ *"..mutes.mute_photo.."*\n_بیصدا فیلم :_ *"..mutes.mute_video.."*\n_بیصدا آهنگ :_ *"..mutes.mute_audio.."*\n_بیصدا صدا :_ *"..mutes.mute_voice.."*\n_بیصدا برچسب :_ *"..mutes.mute_sticker.."*\n_بیصدا مخاطب :_ *"..mutes.mute_contact.."*\n_بیصدا نقل قول :_ *"..mutes.mute_forward.."*\n_بیصدا موقعیت :_ *"..mutes.mute_location.."*\n_بیصدا اسناد :_ *"..mutes.mute_document.."*\n_بیصدا خدمات تلگرام :_ *"..mutes.mute_tgservice.."*\n_بیصدا صفحه کلید :_ *"..mutes.mute_keyboard.."*\n_بیصدا همه پیام ها :_ "..mute_all2.."\n*____________________*\n*Bot channel*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
 end
 text = string.gsub(text, 'yes', '🔇')
 text = string.gsub(text, 'no', '🔉')
-return text
-end
-
-function group_option(msg, target) 	
-local hash = "gp_lang:"..msg.to.id
-local lang = redis:get(hash)
-if not is_mod(msg) then
-if not lang then
- 	return "_You're Not_ *Moderator*"
-else
-  return "شما مدیر گروه نمیباشید"
-end
-end
-local data = load_data(_config.moderation.data)
-local target = msg.to.id 
-if data[tostring(target)] then 	
-if data[tostring(target)]["settings"]["num_msg_max"] then 	
-NUM_MSG_MAX = tonumber(data[tostring(target)]['settings']['num_msg_max'])
-	print('custom'..NUM_MSG_MAX) 	
-else 	
-NUM_MSG_MAX = 5
-end
-if data[tostring(target)]["settings"]["set_char"] then 	
-SETCHAR = tonumber(data[tostring(target)]['settings']['set_char'])
-	print('custom'..SETCHAR) 	
-else 	
-SETCHAR = 40
-end
-if data[tostring(target)]["settings"]["time_check"] then 	
-TIME_CHECK = tonumber(data[tostring(target)]['settings']['time_check'])
-	print('custom'..TIME_CHECK) 	
-else 	
-TIME_CHECK = 2
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_link"] then			
-data[tostring(target)]["settings"]["lock_link"] = "yes"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_tag"] then			
-data[tostring(target)]["settings"]["lock_tag"] = "yes"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_mention"] then			
-data[tostring(target)]["settings"]["lock_mention"] = "no"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_arabic"] then			
-data[tostring(target)]["settings"]["lock_arabic"] = "no"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_edit"] then			
-data[tostring(target)]["settings"]["lock_edit"] = "no"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_spam"] then			
-data[tostring(target)]["settings"]["lock_spam"] = "yes"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_flood"] then			
-data[tostring(target)]["settings"]["lock_flood"] = "yes"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_bots"] then			
-data[tostring(target)]["settings"]["lock_bots"] = "yes"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_markdown"] then			
-data[tostring(target)]["settings"]["lock_markdown"] = "no"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["lock_webpage"] then			
-data[tostring(target)]["settings"]["lock_webpage"] = "no"		
-end
-end
-
-if data[tostring(target)]["settings"] then		
-if not data[tostring(target)]["settings"]["welcome"] then			
-data[tostring(target)]["settings"]["welcome"] = "no"		
-end
-end
-
- if data[tostring(target)]["settings"] then		
- if not data[tostring(target)]["settings"]["lock_pin"] then			
- data[tostring(target)]["settings"]["lock_pin"] = "no"		
- end
- end
-
- if data[tostring(target)]["settings"] then		
- if not data[tostring(target)]["settings"]["lock_all"] then			
- data[tostring(target)]["settings"]["lock_all"] = "no"		
- end
- end
-if data[tostring(target)]["settings"] then		
- if not data[tostring(target)]["settings"]["lock_join"] then			
- data[tostring(target)]["settings"]["lock_join"] = "no"		
- end
- end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_gif"] then			
-data[tostring(target)]["mutes"]["mute_gif"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_text"] then			
-data[tostring(target)]["mutes"]["mute_text"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_photo"] then			
-data[tostring(target)]["mutes"]["mute_photo"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_video"] then			
-data[tostring(target)]["mutes"]["mute_video"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_audio"] then			
-data[tostring(target)]["mutes"]["mute_audio"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_voice"] then			
-data[tostring(target)]["mutes"]["mute_voice"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_sticker"] then			
-data[tostring(target)]["mutes"]["mute_sticker"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_contact"] then			
-data[tostring(target)]["mutes"]["mute_contact"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_forward"] then			
-data[tostring(target)]["mutes"]["mute_forward"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_location"] then			
-data[tostring(target)]["mutes"]["mute_location"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_document"] then			
-data[tostring(target)]["mutes"]["mute_document"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_tgservice"] then			
-data[tostring(target)]["mutes"]["mute_tgservice"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_inline"] then			
-data[tostring(target)]["mutes"]["mute_inline"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_game"] then			
-data[tostring(target)]["mutes"]["mute_game"] = "no"		
-end
-end
-if data[tostring(target)]["mutes"] then		
-if not data[tostring(target)]["mutes"]["mute_keyboard"] then			
-data[tostring(target)]["mutes"]["mute_keyboard"] = "no"		
-end
-end
-
-local hash = "muteall:"..msg.to.id
-local check_time = redis:ttl(hash)
-day = math.floor(check_time / 86400)
-bday = check_time % 86400
-hours = math.floor( bday / 3600)
-bhours = bday % 3600
-min = math.floor(bhours / 60)
-sec = math.floor(bhours % 60)
-if not lang then
-if not redis:get(hash) or check_time == -1 then
- mute_all1 = 'no'
-elseif tonumber(check_time) > 1 and check_time < 60 then
- mute_all1 = '_enable for_ *'..sec..'* _sec_'
-elseif tonumber(check_time) > 60 and check_time < 3600 then
- mute_all1 = '_enable for_ '..min..' _min_ *'..sec..'* _sec_'
-elseif tonumber(check_time) > 3600 and tonumber(check_time) < 86400 then
- mute_all1 = '_enable for_ *'..hours..'* _hour_ *'..min..'* _min_ *'..sec..'* _sec_'
-elseif tonumber(check_time) > 86400 then
- mute_all1 = '_enable for_ *'..day..'* _day_ *'..hours..'* _hour_ *'..min..'* _min_ *'..sec..'* _sec_'
- end
-elseif lang then
-if not redis:get(hash) or check_time == -1 then
- mute_all2 = '*no*'
-elseif tonumber(check_time) > 1 and check_time < 60 then
- mute_all2 = '_فعال برای_ *'..sec..'* _ثانیه_'
-elseif tonumber(check_time) > 60 and check_time < 3600 then
- mute_all2 = '_فعال برای_ *'..min..'* _دقیقه و_ *'..sec..'* _ثانیه_'
-elseif tonumber(check_time) > 3600 and tonumber(check_time) < 86400 then
- mute_all2 = '_فعال برای_ *'..hours..'* _ساعت و_ *'..min..'* _دقیقه و_ *'..sec..'* _ثانیه_'
-elseif tonumber(check_time) > 86400 then
- mute_all2 = '_فعال برای_ *'..day..'* _روز و_ *'..hours..'* _ساعت و_ *'..min..'* _دقیقه و_ *'..sec..'* _ثانیه_'
- end
-end
-
- local expire_date = ''
-local expi = redis:ttl('ExpireDate:'..msg.to.id)
-if expi == -1 then
-if lang then
-	expire_date = 'نامحدود!'
-else
-	expire_date = 'Unlimited!'
-end
-else
-	local day = math.floor(expi / 86400) + 1
-if lang then
-	expire_date = day..' روز'
-else
-	expire_date = day..' Days'
-end
-end
-local cmdss = redis:hget('group:'..msg.to.id..':cmd', 'bot')
-	local cmdsss = ''
-	if lang then
-	if cmdss == 'owner' then
-	cmdsss = cmdsss..'اونر و بالاتر'
-	elseif cmdss == 'moderator' then
-	cmdsss = cmdsss..'مدیر و بالاتر'
-	else
-	cmdsss = cmdsss..'کاربر و بالاتر'
-	end
-	else
-	if cmdss == 'owner' then
-	cmdsss = cmdsss..'Owner or higher'
-	elseif cmdss == 'moderator' then
-	cmdsss = cmdsss..'Moderator or higher'
-	else
-	cmdsss = cmdsss..'Member or higher'
-	end
-	end
-if not lang then
-local settings = data[tostring(target)]["settings"]
-local mutes = data[tostring(target)]["mutes"]
-text = "*Group Settings:*\n_Lock edit :_ *"..settings.lock_edit.."*\n_Lock links :_ *"..settings.lock_link.."*\n_Lock tags :_ *"..settings.lock_tag.."*\n_Lock Join :_ *"..settings.lock_join.."*\n_Lock flood :_ *"..settings.lock_flood.."*\n_Lock spam :_ *"..settings.lock_spam.."*\n_Lock mention :_ *"..settings.lock_mention.."*\n_Lock arabic :_ *"..settings.lock_arabic.."*\n_Lock webpage :_ *"..settings.lock_webpage.."*\n_Lock markdown :_ *"..settings.lock_markdown.."*\n_Group welcome :_ *"..settings.welcome.."*\n_Lock pin message :_ *"..settings.lock_pin.."*\n_Bots protection :_ *"..settings.lock_bots.."*\n_Lock all :_ *"..settings.lock_all.."*\n_Flood sensitivity :_ *"..NUM_MSG_MAX.."*\n_Character sensitivity :_ *"..SETCHAR.."*\n_Flood check time :_ *"..TIME_CHECK.."*\n\n*Group Mute List* : \n_Mute gif :_ *"..mutes.mute_gif.."*\n_Mute text :_ *"..mutes.mute_text.."*\n_Mute inline :_ *"..mutes.mute_inline.."*\n_Mute game :_ *"..mutes.mute_game.."*\n_Mute photo :_ *"..mutes.mute_photo.."*\n_Mute video :_ *"..mutes.mute_video.."*\n_Mute audio :_ *"..mutes.mute_audio.."*\n_Mute voice :_ *"..mutes.mute_voice.."*\n_Mute sticker :_ *"..mutes.mute_sticker.."*\n_Mute contact :_ *"..mutes.mute_contact.."*\n_Mute forward :_ *"..mutes.mute_forward.."*\n_Mute location :_ *"..mutes.mute_location.."*\n_Mute document :_ *"..mutes.mute_document.."*\n_Mute TgService :_ *"..mutes.mute_tgservice.."*\n_Mute Keyboard :_ *"..mutes.mute_keyboard.."*\n_Mute All :_ *"..mute_all1.."*\n*____________________*\n_Bot Commands :_ *"..cmdsss.."*\n_Expire Date :_ *"..expire_date.."*\n*Bot channel*: @BeyondTeam\n*Group Language* : *EN*"
-else
-local settings = data[tostring(target)]["settings"]
-local mutes = data[tostring(target)]["mutes"] 
- text = "*تنظیمات گروه:*\n_قفل ویرایش پیام :_ *"..settings.lock_edit.."*\n_قفل لینک :_ *"..settings.lock_link.."*\n_قفل ورود :_ *"..settings.lock_join.."*\n_قفل تگ :_ *"..settings.lock_tag.."*\n_قفل پیام مکرر :_ *"..settings.lock_flood.."*\n_قفل هرزنامه :_ *"..settings.lock_spam.."*\n_قفل فراخوانی :_ *"..settings.lock_mention.."*\n_قفل عربی :_ *"..settings.lock_arabic.."*\n_قفل صفحات وب :_ *"..settings.lock_webpage.."*\n_قفل فونت :_ *"..settings.lock_markdown.."*\n_پیام خوشآمد گویی :_ *"..settings.welcome.."*\n_قفل سنجاق کردن :_ *"..settings.lock_pin.."*\n_محافظت در برابر ربات ها :_ *"..settings.lock_bots.."*\n_قفل همه :_ *"..settings.lock_all.."*\n_حداکثر پیام مکرر :_ *"..NUM_MSG_MAX.."*\n_حداکثر حروف مجاز :_ *"..SETCHAR.."*\n_زمان بررسی پیام های مکرر :_ *"..TIME_CHECK.."*\n\n*لیست بیصدا ها* : \n_بیصدا تصاویر متحرک :_ *"..mutes.mute_gif.."*\n_بیصدا متن :_ *"..mutes.mute_text.."*\n_بیصدا کیبورد شیشه ای :_ *"..mutes.mute_inline.."*\n_بیصدا بازی های تحت وب :_ *"..mutes.mute_game.."*\n_بیصدا عکس :_ *"..mutes.mute_photo.."*\n_بیصدا فیلم :_ *"..mutes.mute_video.."*\n_بیصدا آهنگ :_ *"..mutes.mute_audio.."*\n_بیصدا صدا :_ *"..mutes.mute_voice.."*\n_بیصدا برچسب :_ *"..mutes.mute_sticker.."*\n_بیصدا مخاطب :_ *"..mutes.mute_contact.."*\n_بیصدا نقل قول :_ *"..mutes.mute_forward.."*\n_بیصدا موقعیت :_ *"..mutes.mute_location.."*\n_بیصدا اسناد :_ *"..mutes.mute_document.."*\n_بیصدا خدمات تلگرام :_ *"..mutes.mute_tgservice.."*\n_بیصدا صفحه کلید :_ *"..mutes.mute_keyboard.."*\n_بیصدا همه پیام ها :_ *"..mute_all2.."*\n*____________________*\n_دستورات ربات :_ *"..cmdsss.."*\n_تاریخ انقضا :_ *"..expire_date.."*\n*کانال ما*: @BeyondTeam\n_زبان سوپرگروه_ : *فارسی*"
-end
-text = string.gsub(text, 'yes', '✅')
-text = string.gsub(text, 'no', '❌')
-if lang and tonumber(NUM_MSG_MAX) < 10 then
-text = string.gsub(text, '0', '0⃣')
-text = string.gsub(text, '1', '1⃣')
-text = string.gsub(text, '2', '2️⃣')
-text = string.gsub(text, '3', '3️⃣')
-text = string.gsub(text, '4', '4️⃣')
-text = string.gsub(text, '5', '5️⃣')
-text = string.gsub(text, '6', '6️⃣')
-text = string.gsub(text, '7', '7️⃣')
-text = string.gsub(text, '8', '8️⃣')
-text = string.gsub(text, '9', '9️⃣')
-elseif not lang then
-text = string.gsub(text, '0', '0⃣')
-text = string.gsub(text, '1', '1⃣')
-text = string.gsub(text, '2', '2️⃣')
-text = string.gsub(text, '3', '3️⃣')
-text = string.gsub(text, '4', '4️⃣')
-text = string.gsub(text, '5', '5️⃣')
-text = string.gsub(text, '6', '6️⃣')
-text = string.gsub(text, '7', '7️⃣')
-text = string.gsub(text, '8', '8️⃣')
-text = string.gsub(text, '9', '9️⃣')
-end
 return text
 end
 
@@ -3162,7 +2765,7 @@ if cmd == 'moderator' and not is_mod(msg) or cmd == 'owner' and not is_owner(msg
  return 
  else
 if msg.to.type ~= 'pv' then
-if (matches[1]:lower() == "id" and not lang) or (matches[1] == 'ایدی' and lang) then
+if matches[1]:lower() == "id" or matches[1] == 'ایدی' then
 if not matches[2] and not msg.reply_id then
 local function getpro(arg, data)
    if data.photos_[0] then
@@ -3196,7 +2799,7 @@ if matches[2] and #matches[2] > 3 and not matches[3] then
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="id"})
       end
    end
-if ((matches[1]:lower() == "pin" and not lang) or (matches[1] == 'سنجاق' and lang)) and is_mod(msg) and msg.reply_id then
+if (matches[1]:lower() == "pin" or matches[1] == 'سنجاق') and is_mod(msg) and msg.reply_id then
 local lock_pin = data[tostring(msg.to.id)]["settings"]["lock_pin"] 
  if lock_pin == 'yes' then
 if is_owner(msg) then
@@ -3222,7 +2825,7 @@ return "پیام سجاق شد"
 end
 end
 end
-if ((matches[1]:lower() == 'unpin' and not lang) or (matches[1] == 'حذف سنجاق' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == 'unpin' or matches[1] == 'حذف سنجاق') and is_mod(msg) then
 local lock_pin = data[tostring(msg.to.id)]["settings"]["lock_pin"] 
  if lock_pin == 'yes' then
 if is_owner(msg) then
@@ -3244,13 +2847,13 @@ return "پیام سنجاق شده پاک شد"
 end
 end
 end
-if (matches[1]:lower() == "add" and not lang) or (matches[1] == 'افزودن' and lang) then
+if matches[1]:lower() == "add" or matches[1] == 'افزودن' then
 return modadd(msg)
 end
-if (matches[1]:lower() == "rem" and not lang) or (matches[1] == 'حذف گروه' and lang) then
+if matches[1]:lower() == "rem" or matches[1] == 'حذف گروه' then
 return modrem(msg)
 end
-if ((matches[1]:lower() == "setmanager" and not lang) or (matches[1] == 'ادمین گروه' and lang)) and is_owner(msg) then
+if (matches[1]:lower() == "setmanager" or matches[1] == 'ادمین گروه') and is_owner(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3271,7 +2874,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="setmanager"})
       end
    end
-if ((matches[1]:lower() == "remmanager" and not lang) or (matches[1] == 'حذف ادمین گروه' and lang)) and is_owner(msg) then
+if (matches[1]:lower() == "remmanager" or matches[1] == 'حذف ادمین گروه') and is_owner(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3292,7 +2895,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="remmanager"})
       end
    end
-if ((matches[1]:lower() == "whitelist" and not lang) or (matches[1] == 'لیست سفید' and lang)) and matches[2] == "+" and is_mod(msg) then
+if (matches[1]:lower() == "whitelist" or matches[1] == 'لیست سفید') and matches[2] == "+" and is_mod(msg) then
 if not matches[3] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3313,7 +2916,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[3],cmd="setwhitelist"})
       end
    end
-if ((matches[1]:lower() == "whitelist" and not lang) or (matches[1] == 'لیست سفید' and lang)) and matches[2] == "-" and is_mod(msg) then
+if (matches[1]:lower() == "whitelist" or matches[1] == 'لیست سفید') and matches[2] == "-" and is_mod(msg) then
 if not matches[3] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3334,7 +2937,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[3],cmd="remwhitelist"})
       end
    end
-if ((matches[1]:lower() == "setowner" and not lang) or (matches[1] == 'مالک' and lang)) and is_admin(msg) then
+if (matches[1]:lower() == "setowner" or matches[1] == 'مالک') and is_admin(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3355,7 +2958,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="setowner"})
       end
    end
-if ((matches[1]:lower() == "remowner" and not lang) or (matches[1] == 'حذف مالک' and lang)) and is_admin(msg) then
+if (matches[1]:lower() == "remowner" or matches[1] == 'حذف مالک') and is_admin(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3376,7 +2979,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="remowner"})
       end
    end
-if ((matches[1]:lower() == "promote" and not lang) or (matches[1] == 'مدیر' and not lang)) and is_owner(msg) then
+if (matches[1]:lower() == "promote" or matches[1] == 'مدیر') and is_owner(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -3397,7 +3000,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="promote"})
       end
    end
-if ((matches[1]:lower() == "demote" and not lang) or (matches[1] == 'حذف مدیر' and lang)) and is_owner(msg) then
+if (matches[1]:lower() == "demote" or matches[1] == 'حذف مدیر') and is_owner(msg) then
 if not matches[2] and msg.reply_id then
  tdcli_function ({
       ID = "GetMessage",
@@ -3418,7 +3021,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="demote"})
       end
    end
-if ((matches[1]:lower() == "lock" and not lang) or (matches[1] == 'قفل' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "lock" or matches[1] == 'قفل') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "link" then
@@ -3426,9 +3029,6 @@ return lock_link(msg, data, target)
 end
 if matches[2] == "tag" then
 return lock_tag(msg, data, target)
-end
-if matches[2] == "all" then
-return lock_all(msg, data, target)
 end
 if matches[2] == "mention" then
 return lock_mention(msg, data, target)
@@ -3471,9 +3071,6 @@ end
 if matches[2] == 'تگ' then
 return lock_tag(msg, data, target)
 end
-if matches[2] == "همه" then
-return lock_all(msg, data, target)
-end
 if matches[2] == 'فراخوانی' then
 return lock_mention(msg, data, target)
 end
@@ -3510,7 +3107,7 @@ if matches[2] == 'دستورات' then
 			end
 			end
 end
-if ((matches[1]:lower() == "unlock" and not lang) or (matches[1] == 'باز' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "unlock" or matches[1] == 'باز') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "link" then
@@ -3518,9 +3115,6 @@ return unlock_link(msg, data, target)
 end
 if matches[2] == "tag" then
 return unlock_tag(msg, data, target)
-end
-if matches[2] == "all" then
-return unlock_all(msg, data, target)
 end
 if matches[2] == "mention" then
 return unlock_mention(msg, data, target)
@@ -3563,9 +3157,6 @@ end
 if matches[2] == 'تگ' then
 return unlock_tag(msg, data, target)
 end
-if matches[2] == "همه" then
-return unlock_all(msg, data, target)
-end
 if matches[2] == 'فراخوانی' then
 return unlock_mention(msg, data, target)
 end
@@ -3602,7 +3193,7 @@ if matches[2] == 'دستورات' then
 			end
 	end
 end
-if ((matches[1]:lower() == "mute" and not lang) or (matches[1] == 'بیصدا' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "mute" or matches[1] == 'بیصدا') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "gif" then
@@ -3708,7 +3299,7 @@ return "بیصدا کردن گروه فعال شد"
 end
 end
 end
-if ((matches[1]:lower() == "unmute" and not lang) or (matches[1] == 'باصدا' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "unmute" or matches[1] == 'باصدا') and is_mod(msg) then
 local target = msg.to.id
 if not lang then
 if matches[2] == "gif" then
@@ -3815,7 +3406,7 @@ end
 end
 end
 end
-if ((matches[1]:lower() == 'cmds' and not lang) or (matches[1] == 'دستورات' and lang)) and is_owner(msg) then 
+if (matches[1]:lower() == 'cmds' or matches[1] == 'دستورات') and is_owner(msg) then 
 	if not lang then
 		if matches[2]:lower() == 'owner' then 
 		redis:hset('group:'..msg.to.id..':cmd', 'bot', 'owner') 
@@ -3844,7 +3435,7 @@ if ((matches[1]:lower() == 'cmds' and not lang) or (matches[1] == 'دستورا�
 		end 
 		end
 	end
-if ((matches[1]:lower() == "gpinfo" and not lang) or (matches[1] == 'اطلاعات گروه' and lang)) and is_mod(msg) and msg.to.type == "channel" then
+if (matches[1]:lower() == "gpinfo" or matches[1] == 'اطلاعات گروه') and is_mod(msg) and msg.to.type == "channel" then
 local function group_info(arg, data)
 if not lang then
 ginfo = "*Group Info :*\n_Admin Count :_ *"..data.administrator_count_.."*\n_Member Count :_ *"..data.member_count_.."*\n_Kicked Count :_ *"..data.kicked_count_.."*\n_Group ID :_ *"..data.channel_.id_.."*"
@@ -3855,7 +3446,7 @@ end
 end
  tdcli.getChannelFull(msg.to.id, group_info, {chat_id=msg.to.id,msg_id=msg.id})
 end
-if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک جدید' and lang)) and is_mod(msg) and not matches[2] then
+if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is_mod(msg) and not matches[2] then
 	local function callback_link (arg, data)
     local administration = load_data(_config.moderation.data) 
 				if not data.invite_link_ then
@@ -3878,7 +3469,7 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
 			end
  tdcli.exportChatInviteLink(msg.to.id, callback_link, nil)
 		end
-		if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک جدید' and lang)) and is_mod(msg) and ((matches[2] == 'pv' and not lang) or (matches[2] == 'خصوصی' and lang)) then
+		if (matches[1]:lower() == 'newlink' or matches[1] == 'لینک جدید') and is_mod(msg) and (matches[2] == 'pv' or matches[2] == 'خصوصی') then
 	local function callback_link (arg, data)
 		local result = data.invite_link_
 		local administration = load_data(_config.moderation.data) 
@@ -3904,7 +3495,7 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
 			end
  tdcli.exportChatInviteLink(msg.to.id, callback_link, nil)
 		end
-		if ((matches[1]:lower() == 'setlink' and not lang) or (matches[1] == 'تنظیم لینک' and lang)) and is_owner(msg) then
+		if (matches[1]:lower() == 'setlink' or matches[1] == 'تنظیم لینک') and is_owner(msg) then
 		if not matches[2] then
 		data[tostring(chat)]['settings']['linkgp'] = 'waiting'
 			save_data(_config.moderation.data, data)
@@ -3934,7 +3525,7 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
 		 	end
        end
 		end
-    if ((matches[1]:lower() == 'link' and not lang) or (matches[1] == 'لینک' and lang)) and is_mod(msg) and not matches[2] then
+    if (matches[1]:lower() == 'link' or matches[1] == 'لینک') and is_mod(msg) and not matches[2] then
       local linkgp = data[tostring(chat)]['settings']['linkgp']
       if not linkgp then
       if not lang then
@@ -3950,7 +3541,7 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
          end
         return tdcli.sendMessage(chat, msg.id, 1, text, 1, 'html')
      end
-    if ((matches[1]:lower() == 'link' and not lang) or (matches[1] == 'لینک' and lang)) and ((matches[2] == 'pv' and not lang) or (matches[2] == 'خصوصی' and lang)) then
+    if (matches[1]:lower() == 'link' or matches[1] == 'لینک') and (matches[2] == 'pv' or matches[2] == 'خصوصی') then
 	if is_mod(msg) then
       local linkgp = data[tostring(chat)]['settings']['linkgp']
       if not linkgp then
@@ -3969,7 +3560,7 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
          end
      end
 	 end
-  if ((matches[1]:lower() == "setrules" and not lang) or (matches[1] == 'تنظیم قوانین' and lang)) and matches[2] and is_mod(msg) then
+  if (matches[1]:lower() == "setrules" or matches[1] == 'تنظیم قوانین') and matches[2] and is_mod(msg) then
     data[tostring(chat)]['rules'] = matches[2]
 	  save_data(_config.moderation.data, data)
      if not lang then
@@ -3978,7 +3569,7 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
   return "قوانین گروه ثبت شد"
    end
   end
-  if (matches[1]:lower() == "rules" and not lang) or (matches[1] == 'قوانین' and lang) then
+  if matches[1]:lower() == "rules" or matches[1] == 'قوانین' then
  if not data[tostring(chat)]['rules'] then
    if not lang then
      rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@BeyondTeam"
@@ -3990,19 +3581,19 @@ if ((matches[1]:lower() == 'newlink' and not lang) or (matches[1] == 'لینک �
       end
     return rules
   end
-if ((matches[1]:lower() == "res" and not lang) or (matches[1] == 'کاربری' and lang)) and matches[2] and is_mod(msg) then
+if (matches[1]:lower() == "res" or matches[1] == 'کاربری') and matches[2] and is_mod(msg) then
     tdcli_function ({
       ID = "SearchPublicChat",
       username_ = matches[2]
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="res"})
   end
-if ((matches[1]:lower() == "whois" and not lang) or (matches[1] == 'شناسه' and lang)) and matches[2] and string.match(matches[2], '^%d+$') and is_mod(msg) then
+if (matches[1]:lower() == "whois" or matches[1] == 'شناسه') and matches[2] and string.match(matches[2], '^%d+$') and is_mod(msg) then
 tdcli_function ({
     ID = "GetUser",
     user_id_ = matches[2],
   }, action_by_id, {chat_id=msg.to.id,user_id=matches[2],cmd="whois"})
   end
-		if ((matches[1]:lower() == 'setchar' and not lang) or (matches[1]:lower() == 'حداکثر حروف مجاز' and lang)) then
+		if matches[1]:lower() == 'setchar' or matches[1]:lower() == 'حداکثر حروف مجاز' then
 			if not is_mod(msg) then
 				return
 			end
@@ -4015,7 +3606,7 @@ tdcli_function ({
      return "_حداکثر حروف مجاز در پیام تنظیم شد به :_ *[ "..matches[2].." ]*"
 		end
   end
-  if ((matches[1]:lower() == 'setflood' and not lang) or (matches[1] == 'تنظیم پیام مکرر' and lang)) and is_mod(msg) then
+  if (matches[1]:lower() == 'setflood' or matches[1] == 'تنظیم پیام مکرر') and is_mod(msg) then
 			if tonumber(matches[2]) < 1 or tonumber(matches[2]) > 50 then
 				return "_Wrong number, range is_ *[2-50]*"
       end
@@ -4028,7 +3619,7 @@ tdcli_function ({
     return '_محدودیت پیام مکرر به_ *'..tonumber(matches[2])..'* _تنظیم شد._'
     end
        end
-  if ((matches[1]:lower() == 'setfloodtime' and not lang) or (matches[1] == 'تنظیم زمان بررسی' and lang)) and is_mod(msg) then
+  if (matches[1]:lower() == 'setfloodtime' or matches[1] == 'تنظیم زمان بررسی') and is_mod(msg) then
 			if tonumber(matches[2]) < 2 or tonumber(matches[2]) > 10 then
 				return "_Wrong number, range is_ *[2-10]*"
       end
@@ -4041,7 +3632,7 @@ tdcli_function ({
     return "_حداکثر زمان بررسی پیام های مکرر تنظیم شد به :_ *[ "..matches[2].." ]*"
     end
        end
-		if ((matches[1]:lower() == 'clean' and not lang) or (matches[1] == 'پاک کردن' and lang)) and is_owner(msg) then
+		if (matches[1]:lower() == 'clean' or matches[1] == 'پاک کردن') and is_owner(msg) then
 		if not lang then
 			if matches[2] == 'mods' then
 				if next(data[tostring(chat)]['mods']) == nil then
@@ -4143,7 +3734,7 @@ tdcli_function ({
 			
 			end
         end
-		if ((matches[1]:lower() == 'clean' and not lang) or (matches[1] == 'پاک کردن' and lang)) and is_admin(msg) then
+		if (matches[1]:lower() == 'clean' or matches[1] == 'پاک کردن') and is_admin(msg) then
 		if not lang then
 			if matches[2] == 'owners' then
 				if next(data[tostring(chat)]['owners']) == nil then
@@ -4168,11 +3759,11 @@ tdcli_function ({
 			end
 			end
      end
-if ((matches[1]:lower() == "setname" and not lang) or (matches[1] == 'تنظیم نام' and lang)) and matches[2] and is_mod(msg) then
+if (matches[1]:lower() == "setname" or matches[1] == 'تنظیم نام') and matches[2] and is_mod(msg) then
 local gp_name = matches[2]
 tdcli.changeChatTitle(chat, gp_name, dl_cb, nil)
 end
-  if ((matches[1]:lower() == "setabout" and not lang) or (matches[1] == 'تنظیم درباره' and lang)) and matches[2] and is_mod(msg) then
+  if (matches[1]:lower() == "setabout" or matches[1] == 'تنظیم درباره') and matches[2] and is_mod(msg) then
      if msg.to.type == "channel" then
    tdcli.changeChannelAbout(chat, matches[2], dl_cb, nil)
     elseif msg.to.type == "chat" then
@@ -4185,7 +3776,7 @@ end
      return "پیام مبنی بر درباره گروه ثبت شد"
       end
   end
-  if ((matches[1]:lower() == "about" and not lang) or (matches[1] == 'درباره' and lang)) and msg.to.type == "chat" then
+  if matches[1]:lower() == "about" or matches[1] == 'درباره' and msg.to.type == "chat" then
  if not data[tostring(chat)]['about'] then
      if not lang then
      about = "_No_ *description* _available_"
@@ -4197,50 +3788,34 @@ end
       end
     return about
   end
-  if (matches[1]:lower() == 'filter' and not lang) or (matches[1] == 'فیلتر' and lang) then
+  if (matches[1]:lower() == 'filter' or matches[1] == 'فیلتر') and is_mod(msg) then
     return filter_word(msg, matches[2])
   end
-  if (matches[1]:lower() == 'unfilter' and not lang) or (matches[1] == 'حذف فیلتر' and lang) then
+  if (matches[1]:lower() == 'unfilter' or matches[1] == 'حذف فیلتر') and is_mod(msg) then
     return unfilter_word(msg, matches[2])
   end
-  if ((matches[1]:lower() == 'config' and not lang) or (matches[1] == 'پیکربندی' and lang)) and is_admin(msg) then
+  if (matches[1]:lower() == 'config' or matches[1] == 'پیکربندی') and is_admin(msg) then
 tdcli.getChannelMembers(msg.to.id, 0, 'Administrators', 200, config_cb, {chat_id=msg.to.id})
   end
-  if ((matches[1]:lower() == 'filterlist' and not lang) or (matches[1] == 'لیست فیلتر' and lang)) and is_mod(msg) then
+  if (matches[1]:lower() == 'filterlist' or matches[1] == 'لیست فیلتر') and is_mod(msg) then
     return filter_list(msg)
   end
-if (matches[1]:lower() == "modlist" and not lang) or (matches[1] == 'لیست مدیران' and lang) then
+if (matches[1]:lower() == "modlist" or matches[1] == 'لیست مدیران') and is_mod(msg) then
 return modlist(msg)
 end
-if ((matches[1]:lower() == "whitelist" and not lang) or (matches[1] == 'لیست سفید' and lang)) and not matches[2] then
+if (matches[1]:lower() == "whitelist" or matches[1] == 'لیست سفید') and not matches[2] and is_mod(msg) then
 return whitelist(msg.to.id)
 end
-if ((matches[1]:lower() == "ownerlist" and not lang) or (matches[1] == 'لیست مالکان' and lang)) and is_owner(msg) then
+if (matches[1]:lower() == "ownerlist" or matches[1] == 'لیست مالکان') and is_owner(msg) then
 return ownerlist(msg)
 end
-if ((matches[1]:lower() == "option" and not lang) or (matches[1] == 'تنظیمات کلی' and lang)) and is_mod(msg) then
-local function inline_query_cb(arg, data)
-      if data.results_ and data.results_[0] then
-tdcli.sendInlineQueryResultMessage(msg.to.id, 0, 0, 1, data.inline_query_id_, data.results_[0].id_, dl_cb, nil)
-    else
-    if not lang then
-    text = "*Helper is offline*\n\n"
-        elseif lang then
-    text = "_ربات هلپر خاموش است_\n\n"
-    end
-  return tdcli.sendMessage(msg.to.id, msg.id, 0, text..''..group_option(msg, target), 0, "md")
-   end
-end
-tdcli.getInlineQueryResults(319089622, msg.to.id, 0, 0, ''..msg.to.id..' option', 0, inline_query_cb, nil)
-end
-end
-if ((matches[1]:lower() == "settings" and not lang) or (matches[1] == 'تنظیمات' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "settings" or matches[1] == 'تنظیمات') and is_mod(msg) then
 return group_settings(msg, target)
 end
-if ((matches[1]:lower() == "mutelist" and not lang) or (matches[1] == 'لیست بیصدا' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "mutelist" or matches[1] == 'لیست بیصدا') and is_mod(msg) then
 return mutes(msg, target)
 end
-if (matches[1]:lower() == "setlang" and not lang) and is_owner(msg) then
+if matches[1]:lower() == "setlang" and is_owner(msg) then
 local hash = "gp_lang:"..msg.to.id
 local lang = redis:get(hash)
 if matches[2] == "fa" then
@@ -4248,13 +3823,13 @@ redis:set(hash, true)
 return "*زبان گروه تنظیم شد به : فارسی*"..BDRpm
 end
 end
-if (matches[1] == 'زبان انگلیسی' and lang) and is_owner(msg) then
+if matches[1] == 'زبان انگلیسی' then
 local hash = "gp_lang:"..msg.to.id
 local lang = redis:get(hash)
  redis:del(hash)
 return "_Group Language Set To:_ EN"..BDRpm
 end
- if ((matches[1] == 'mutetime' and not lang) or (matches[1] == 'زمان بیصدا' and lang)) and is_mod(msg) then
+ if (matches[1] == 'mutetime' or matches[1] == 'زمان بیصدا') and is_mod(msg) then
 local hash = 'muteall:'..msg.to.id
 local hour = tonumber(matches[2])
 local num1 = (tonumber(hour) * 3600)
@@ -4270,7 +3845,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[2].."\n⏺ دقیقه : "..matches[3].."\n⏺ ثانیه : "..matches[4]..BDRpm
  end
  end
- if ((matches[1] == 'mutehours' and not lang) or (matches[1]== 'ساعت بیصدا' and lang)) and is_mod(msg) then
+ if (matches[1] == 'mutehours' or matches[1]== 'ساعت بیصدا') and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
 local hour = matches[2]
 local num1 = tonumber(hour) * 3600
@@ -4282,7 +3857,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ ساعت : "..matches[2]..BDRpm
  end
  end
-  if ((matches[1] == 'muteminutes' and not lang) or (matches[1]== 'دقیقه بیصدا' and lang))  and is_mod(msg) then
+  if (matches[1] == 'muteminutes' or matches[1]== 'دقیقه بیصدا')  and is_mod(msg) then
  local hash = 'muteall:'..msg.to.id
 local minutes = matches[2]
 local num2 = tonumber(minutes) * 60
@@ -4294,7 +3869,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ دقیقه : "..matches[2]..BDRpm
  end
  end
-  if ((matches[1] == 'muteseconds' and not lang) or (matches[1] == 'ثانیه بیصدا' and lang))  and is_mod(msg) then
+  if (matches[1] == 'muteseconds' or matches[1] == 'ثانیه بیصدا') and is_mod(msg) then
        local hash = 'muteall:'..msg.to.id
 local second = matches[2]
 local num3 = tonumber(second) 
@@ -4306,7 +3881,7 @@ if not lang then
  return "بی صدا کردن فعال شد در \n⏺ ثانیه : "..matches[2]..BDRpm
  end
  end
- if ((matches[1] == 'muteall' and not lang) or (matches[1] == 'موقعیت' and lang)) and ((matches[2] == 'status' and not lang) or (matches[2] == 'بیصدا' and lang)) and is_mod(msg) then
+ if (matches[1] == 'muteall' or matches[1] == 'موقعیت') and (matches[2] == 'status' or matches[2] == 'بیصدا') and is_mod(msg) then
          local hash = 'muteall:'..msg.to.id
       local mute_time = redis:ttl(hash)
 		
@@ -4325,7 +3900,7 @@ if not lang then
 		end
   end
 
-if ((matches[1]:lower() == "help" and not lang) or (matches[1] == 'راهنما' and lang)) and is_mod(msg) then
+if (matches[1]:lower() == "help" or matches[1] == 'راهنما') and is_mod(msg) then
 if not lang then
 text = [[
 *Beyond Bot Commands:*
@@ -4440,7 +4015,7 @@ _This Help List Only For_ *Moderators/Owners!*
 _Its Means, Only Group_ *Moderators/Owners* _Can Use It!_
 *Good luck ;)*]]
 
-else
+elseif lang then
 
 text = [[
 *دستورات ربات بیوند:*
@@ -4558,7 +4133,7 @@ end
 return text
 end
 --------------------- Welcome -----------------------
-	if ((matches[1]:lower() == "welcome" and not lang) or (matches[1] == 'خوشآمد' and lang)) and is_mod(msg) then
+	if (matches[1]:lower() == "welcome" or matches[1] == 'خوشآمد') and is_mod(msg) then
 	if not lang then
 		if matches[2] == "enable" then
 			welcome = data[tostring(chat)]['settings']['welcome']
@@ -4605,7 +4180,7 @@ end
 		end
 		end
 	end
-	if ((matches[1]:lower() == "setwelcome" and not lang) or (matches[1] == 'تنظیم خوشآمد' and lang)) and matches[2] and is_mod(msg) then
+	if (matches[1]:lower() == "setwelcome" or matches[1] == 'تنظیم خوشآمد') and matches[2] and is_mod(msg) then
 		data[tostring(chat)]['setwelcome'] = matches[2]
 	    save_data(_config.moderation.data, data)
        if not lang then
@@ -4616,6 +4191,7 @@ end
      end
 	end
 end
+end
 local checkmod = true
 -----------------------------------------
 local function pre_process(msg)
@@ -4624,7 +4200,7 @@ local user = msg.from.id
 local hash = "gp_lang:"..chat
 local lang = redis:get(hash)
 local data = load_data(_config.moderation.data)
-if checkmod and msg.text and msg.to.type == 'channel' then
+ if checkmod and msg.text and msg.to.type == 'channel' then
 	tdcli.getChannelMembers(msg.to.id, 0, 'Administrators', 200, function(a, b)
 	local secchk = true
 	checkmod = false
@@ -4699,11 +4275,10 @@ end
         end
 		end
 	end
-	-- return msg
+	return msg
  end
 return {
 patterns ={
-command .. "([Oo]ption)$",
 command .. "([Ii]d)$",
 command .. "([Aa]dd)$",
 command .. "([Rr]em)$",
@@ -4769,137 +4344,71 @@ command .. '([Mm]uteminutes) (%d+)$',
 command .. '([Mm]uteseconds) (%d+)$',
 "^([https?://w]*.?telegram.me/joinchat/%S+)$",
 "^([https?://w]*.?t.me/joinchat/%S+)$",
- "^([Ii][Dd])$",
- "^([Oo][Pp][Tt][Ii][Oo][Nn])$",
- "^([Aa][Dd][Dd])$",
- "^([Rr][Ee][Mm])$",
- "^([Ii][Dd]) (.*)$",
- "^([Pp][Ii][Nn])$",
- "^([Uu][Nn][Pp][Ii][Nn])$",
- "^([Gg][Pp][Ii][Nn][Ff][Oo])$",
- "^([Ss][Ee][Tt][Mm][Aa][Nn][Aa][Gg][Ee][Rr])$",
- "^([Ss][Ee][Tt][Mm][Aa][Nn][Aa][Gg][Ee][Rr]) (.*)$",
- "^([Rr][Ee][Mm][Mm][Aa][Nn][Aa][Gg][Ee][Rr])$",
- "^([Rr][Ee][Mm][Mm][Aa][Nn][Aa][Gg][Ee][Rr]) (.*)$",
- "^([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([+-])$",
- "^([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([+-]) (.*)$",
- "^([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt])$",
- "^([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
- "^([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr]) (.*)$",
- "^([Rr][Ee][Mm][Oo][Ww][Nn][Ee][Rr])$",
- "^([Rr][Ee][Mm][Oo][Ww][Nn][Ee][Rr]) (.*)$",
- "^([Pp][Rr][Oo][Mm][Oo][Tt][Ee])$",
- "^([Pp][Rr][Oo][Mm][Oo][Tt][Ee]) (.*)$",
- "^([Dd][Ee][Mm][Oo][Tt][Ee])$",
- "^([Dd][Ee][Mm][Oo][Tt][Ee]) (.*)$",
- "^([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
- "^([Oo][Ww][Nn][Ee][Rr][Ll][Ii][Ss][Tt])$",
- "^([Ll][Oo][Cc][Kk]) (.*)$",
- "^([Uu][Nn][Ll][Oo][Cc][Kk]) (.*)$",
- "^([Mm][Uu][Tt][Ee]) (.*)$",
- "^([Uu][Nn][Mm][Uu][Tt][Ee]) (.*)$",
- "^([Ll][Ii][Nn][Kk])$",
- "^([Ll][Ii][Nn][Kk]) (pv)$",
- "^([Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
- "^([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([https?://w]*.?telegram.me/joinchat/%S+)$",
- "^([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([https?://w]*.?[Tt].me/joinchat/%S+)$",
- "^([Nn][Ee][Ww][Ll][Ii][Nn][Kk])$",
- "^([Nn][Ee][Ww][Ll][Ii][Nn][Kk]) (pv)$",  
- "^([Rr][Uu][Ll][Ee][Ss])$",
- "^([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
- "^([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])$",
- "^([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
- "^([Aa][Bb][Oo][Uu][Tt])$",
- "^([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
- "^([Ss][Ee][Tt][Nn][Aa][Mm][Ee]) (.*)$",
- "^([Cc][Ll][Ee][Aa][Nn]) (.*)$",
- "^([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
- "^([Ss][Ee][Tt][Cc][Hh][Aa][Rr]) (%d+)$",
- "^([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd][Tt][Ii][Mm][Ee]) (%d+)$",
- "^([Rr][Ee][Ss]) (.*)$",
- "^([Cc][Mm][Dd][Ss]) (.*)$",
- "^([Ww][Hh][Oo][Ii][Ss]) (%d+)$",
- "^([Hh][Ee][Ll][Pp])$",
- "^([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) (fa)$",
- "^([Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
- "^([Uu][Nn][Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
- "^([Ff][Ii][Ll][Tt][Ee][Rr][Ll][Ii][Ss][Tt])$",
- "^([Cc][Oo][Nn][Ff][Ii][Gg])$",
- "^([Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)",
- "^([Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)",
- '^([Mm]uteall) (status)$',
- '^([Hh]elpmute)$',
- '^([Mm]utetime) (%d+) (%d+) (%d+)$',
- '^([Mm]utehours) (%d+)$',
- '^([Mm]uteminutes) (%d+)$',
- '^([Mm]uteseconds) (%d+)$',
-'^(تنظیمات کلی)$',
-'^(ایدی)$',
-'^(ایدی) (.*)$',
-'^(تنظیمات)$',
-'^(سنجاق)$',
-'^(حذف سنجاق)$',
-'^(افزودن)$',
-'^(حذف گروه)$',
-'^(ادمین گروه)$',
-'^(ادمین گروه) (.*)$',
-'^(حذف ادمین گروه) (.*)$',
-'^(حذف ادمین گروه)$',
-'^(لیست سفید) ([+-]) (.*)$',
-'^(لیست سفید) ([+-])$',
-'^(لیست سفید)$',
-'^(مالک)$',
-'^(مالک) (.*)$',
-'^(حذف مالک) (.*)$',
-'^(حذف مالک)$',
-'^(مدیر)$',
-'^(مدیر) (.*)$',
-'^(حذف مدیر)$',
-'^(حذف مدیر) (.*)$',
-'^(قفل) (.*)$',
-'^(باز) (.*)$',
-'^(بیصدا) (.*)$',
-'^(باصدا) (.*)$',
-'^(لینک جدید)$',
-'^(لینک جدید) (خصوصی)$',
-'^(اطلاعات گروه)$',
-'^(دستورات) (.*)$',
-'^(قوانین)$',
-'^(لینک)$',
-'^(تنظیم لینک)$',
-'^(تنظیم لینک) ([https?://w]*.?telegram.me/joinchat/%S+)$',
-'^(تنظیم لینک) ([https?://w]*.?t.me/joinchat/%S+)$',
-'^(تنظیم قوانین) (.*)$',
-'^(لینک) (خصوصی)$',
-'^(کاربری) (.*)$',
-'^(شناسه) (%d+)$',
-'^(تنظیم پیام مکرر) (%d+)$',
-'^(تنظیم زمان بررسی) (%d+)$',
-'^(حداکثر حروف مجاز) (%d+)$',
-'^(پاک کردن) (.*)$',
-'^(درباره)$',
-'^(تنظیم نام) (.*)$',
-'^(تنظیم درباره) (.*)$',
-'^(لیست فیلتر)$',
-'^(لیست بیصدا)$',
-'^(لیست مالکان)$',
-'^(لیست مدیران)$',
-'^(راهنما)$',
-'^(پیکربندی)$',
-'^(فیلتر) (.*)$',
-'^(حذف فیلتر) (.*)$',
-'^(خوشآمد) (.*)$',
-'^(تنظیم خوشآمد) (.*)$',
-'^(راهنما بیصدا)$',
-'^(ساعت بیصدا) (%d+)$',
-'^(دقیقه بیصدا) (%d+)$',
-'^(ثانیه بیصدا) (%d+)$',
-'^(موقعیت) (بیصدا)$',
-'^(زمان بیصدا) (%d+) (%d+) (%d+)$',
-'^(زبان انگلیسی)$',
+"^([Ii][Dd])$",
+"^([Aa][Dd][Dd])$",
+"^([Rr][Ee][Mm])$",
+"^([Ii][Dd]) (.*)$",
+"^([Pp][Ii][Nn])$",
+"^([Uu][Nn][Pp][Ii][Nn])$",
+"^([Gg][Pp][Ii][Nn][Ff][Oo])$",
+"^([Ss][Ee][Tt][Mm][Aa][Nn][Aa][Gg][Ee][Rr])$",
+"^([Ss][Ee][Tt][Mm][Aa][Nn][Aa][Gg][Ee][Rr]) (.*)$",
+"^([Rr][Ee][Mm][Mm][Aa][Nn][Aa][Gg][Ee][Rr])$",
+"^([Rr][Ee][Mm][Mm][Aa][Nn][Aa][Gg][Ee][Rr]) (.*)$",
+"^([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([+-])$",
+"^([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([+-]) (.*)$",
+"^([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt])$",
+"^([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
+"^([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr]) (.*)$",
+"^([Rr][Ee][Mm][Oo][Ww][Nn][Ee][Rr])$",
+"^([Rr][Ee][Mm][Oo][Ww][Nn][Ee][Rr]) (.*)$",
+"^([Pp][Rr][Oo][Mm][Oo][Tt][Ee])$",
+"^([Pp][Rr][Oo][Mm][Oo][Tt][Ee]) (.*)$",
+"^([Dd][Ee][Mm][Oo][Tt][Ee])$",
+"^([Dd][Ee][Mm][Oo][Tt][Ee]) (.*)$",
+"^([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
+"^([Oo][Ww][Nn][Ee][Rr][Ll][Ii][Ss][Tt])$",
+"^([Ll][Oo][Cc][Kk]) (.*)$",
+"^([Uu][Nn][Ll][Oo][Cc][Kk]) (.*)$",
+"^([Mm][Uu][Tt][Ee]) (.*)$",
+"^([Uu][Nn][Mm][Uu][Tt][Ee]) (.*)$",
+"^([Ll][Ii][Nn][Kk])$",
+"^([Ll][Ii][Nn][Kk]) (pv)$",
+"^([Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
+"^([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([https?://w]*.?telegram.me/joinchat/%S+)$",
+"^([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([https?://w]*.?[Tt].me/joinchat/%S+)$",
+"^([Nn][Ee][Ww][Ll][Ii][Nn][Kk])$",
+"^([Nn][Ee][Ww][Ll][Ii][Nn][Kk]) (pv)$",  
+"^([Rr][Uu][Ll][Ee][Ss])$",
+"^([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
+"^([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])$",
+"^([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
+"^([Aa][Bb][Oo][Uu][Tt])$",
+"^([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
+"^([Ss][Ee][Tt][Nn][Aa][Mm][Ee]) (.*)$",
+"^([Cc][Ll][Ee][Aa][Nn]) (.*)$",
+"^([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
+"^([Ss][Ee][Tt][Cc][Hh][Aa][Rr]) (%d+)$",
+"^([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd][Tt][Ii][Mm][Ee]) (%d+)$",
+"^([Rr][Ee][Ss]) (.*)$",
+"^([Cc][Mm][Dd][Ss]) (.*)$",
+"^([Ww][Hh][Oo][Ii][Ss]) (%d+)$",
+"^([Hh][Ee][Ll][Pp])$",
+"^([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) (fa)$",
+"^([Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
+"^([Uu][Nn][Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
+"^([Ff][Ii][Ll][Tt][Ee][Rr][Ll][Ii][Ss][Tt])$",
+"^([Cc][Oo][Nn][Ff][Ii][Gg])$",
+"^([Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)",
+"^([Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)",
+'^([Mm]uteall) (status)$',
+'^([Hh]elpmute)$',
+'^([Mm]utetime) (%d+) (%d+) (%d+)$',
+'^([Mm]utehours) (%d+)$',
+'^([Mm]uteminutes) (%d+)$',
+'^([Mm]uteseconds) (%d+)$',
 },
 patterns_fa = {
-'^(تنظیمات کلی)$',
 '^(ایدی)$',
 '^(ایدی) (.*)$',
 '^(تنظیمات)$',
@@ -4969,3 +4478,5 @@ patterns_fa = {
 run=run,
 pre_process = pre_process
 }
+
+-- ## @BeyondTeam
